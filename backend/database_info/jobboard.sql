@@ -1,4 +1,5 @@
-\c jobboard
+DROP DATABASE IF EXISTS jobboard;
+CREATE DATABASE jobboard;
 DROP TABLE IF EXISTS jobs;
 CREATE TABLE jobs
 (
