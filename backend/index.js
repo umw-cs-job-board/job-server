@@ -16,8 +16,15 @@ const config = {
 
 const pool = new Pool(config);
 
-app.get("/", (req, res) => {
-	res.json("Sup");
+app.get("/", async (req, res) => {
+	try {
+		const template = "SELECT title, employer_name, location, start_date, end_date, description FROM jobs";
+		const response = await pool.query(template);
+		res.json(response);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
 });
 
 app.listen(app.get("port"), () => {

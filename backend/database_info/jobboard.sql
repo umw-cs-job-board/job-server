@@ -1,6 +1,7 @@
 DROP DATABASE IF EXISTS jobboard;
 CREATE DATABASE jobboard;
 DROP TABLE IF EXISTS jobs;
+\c jobboard;
 CREATE TABLE jobs
 (
 	id SERIAL PRIMARY KEY, 
