@@ -27,6 +27,29 @@ app.get("/", async (req, res) => {
 		}
 });
 
+app.post("/", async (req, res) =>{
+	const id = req.query.id;
+	try{
+		const template1 = "SELECT title FROM jobs WHERE id = $1"
+		const response1 = await pool.query(template1, id);
+		
+		//if no job is found
+		if (response1.rowCount == 0) {
+			res.json({ status: "error: not found"});
+		} else {
+			res.json({ status: "ok", results: response1.rows[0] });
+			console.log(err);
+		}
+
+		const template2 = "DELETE FROM jobs WHERE id = $1"
+		const response2 = await pool.query(template2, id);
+		res.json({status: "listing deleted"}); 
+	}catch (err) {
+		res.json({status: "error: listing not deleted"});
+		console.log(err);
+	}
+});
+
 app.listen(app.get("port"), () => {
 	console.log(`Find the server at: http://localhost:${app.get("port")}/`);
 });
