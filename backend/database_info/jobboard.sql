@@ -1,5 +1,7 @@
-\c jobboard
+DROP DATABASE IF EXISTS jobboard;
+CREATE DATABASE jobboard;
 DROP TABLE IF EXISTS jobs;
+\c jobboard;
 CREATE TABLE jobs
 (
 	id SERIAL PRIMARY KEY, 
@@ -10,3 +12,5 @@ CREATE TABLE jobs
 	end_date DATE NOT NULL, 
 	description VARCHAR NOT NULL
 );
+GRANT SELECT, INSERT, DELETE ON jobs TO jbuser;
+
