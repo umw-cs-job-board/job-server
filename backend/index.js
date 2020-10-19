@@ -28,7 +28,7 @@ app.get("/", async (req, res) => {
 });
 
 //Remove Job
-app.post("/remove-job", async (req, res) =>{
+app.delete("/remove-job", async (req, res) => {
 	const id = req.body.id;
 	try {
 		//Creating a query to check if the job to be removed exists in the job database.
