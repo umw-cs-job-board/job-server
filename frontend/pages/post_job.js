@@ -55,14 +55,17 @@ class PostJob extends React.Component{
 				<input placeholder = 'Senior Data Analyst...' type="text" value={this.state.title} onChange={this.updateTitle.bind(this)} />
 				<p>Location</p>
 				<input placeholder = 'Fredericksburg, VA...' type="text" value={this.state.location} onChange={this.updateLocation.bind(this)} />
-				<p>Start date</p>
+				<p>Start date (MM\DD\YYYY)</p>
 				<input placeholder = '10/3/20' type="text" value={this.state.start_date} onChange={this.updateSD.bind(this)} />
-				<p>End date</p>
+				<p>End date (MM\DD\YYYY)</p>
 				<input placeholder = '10/30/20' type="text" value={this.state.end_date} onChange={this.updateED.bind(this)} />
 				<p>description</p>
 				<input placeholder = 'This is a job blah blah blah' type="text" value={this.state.description} onChange={this.updateDescription.bind(this)} />
 				<br />
-				<button onClick={this.submit.bind(this)}>Submit</button>
+				{((this.state.title=="") || (this.state.employer_name=="") || (this.state.location=="") || (this.state.start_date=="") || (this.state.end_date=="") || (this.state.description==""))  ?
+					<p>Fill out all fields!</p>
+				:<button onClick={this.submit.bind(this)}>Submit</button>}
+				
 				<style jsx>{`
 					div{
 						text-align: center;
