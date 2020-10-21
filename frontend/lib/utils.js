@@ -16,6 +16,19 @@ async function deleteJob(info){
 	});
 }
 
+
+
+
+async function findjobbyid(idnum){
+	return await fetch(`http://localhost:8080/find-job-by-id?id=${idnum}`).then(function(resp){
+		console.log("idnum " + idnum);
+		return resp.json();
+	})
+}
+
+
+
+
 async function postJob(info){
 	const header = {
 		'Accept': "application/json",
@@ -46,6 +59,9 @@ module.exports = {
 
 	createJob: function(info){
 		return postJob(info).catch(handleError);
+	},
+	findjobbyid: function(info){
+		return findjobbyid(info).catch(handleError);
 	},
 	getjobs: function(){
 		return getjob().catch(handleError);

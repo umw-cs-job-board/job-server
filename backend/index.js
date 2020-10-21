@@ -22,7 +22,7 @@ const pool = new Pool(config);
 
 app.get("/", async (req, res) => {
 	try {
-		const template = "SELECT title, employer_name, location, start_date, end_date, description FROM jobs";
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs";
 		const response = await pool.query(template);
 		res.json(response);
 		} catch (err) {
@@ -30,6 +30,28 @@ app.get("/", async (req, res) => {
 			console.log(err);
 		}
 });
+
+
+
+app.get("/find-job-by-id", async (req, res) => {
+	const id = req.query.id;
+	console.log(id);
+	try {
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs WHERE id = $1";
+		const response = await pool.query(template, [id]);
+
+		console.log(response);
+
+		res.json(response);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
+
+
+
+
 
 //Remove Job
 app.delete("/remove-job", async (req, res) => {

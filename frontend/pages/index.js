@@ -1,5 +1,7 @@
 import React from "react";
 import {getjobs} from '../lib/utils.js'
+import Link from 'next/link';
+
 
 class Home extends React.Component {
   constructor(props) {
@@ -50,8 +52,16 @@ class Home extends React.Component {
                       </thead>
                     <tbody>
                       {this.state.jobs.rows.map((item, key) =>
-                        <tr key={item.title}>
-                          <td>{item.title}</td>
+                        <tr key={item.id}>
+                          <td>
+
+                          <Link href="/viewjob/[item.id]" as={`/viewjob/${item.id}`} >
+                            <a>{item.title}</a>
+                          </Link>
+
+
+
+                          </td>
                           <td>{item.employer_name}</td>
                           <td>{item.location}</td>
                           <td>{item.start_date}</td>
