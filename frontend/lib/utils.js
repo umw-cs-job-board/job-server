@@ -1,6 +1,21 @@
 require("isomorphic-fetch");
 import BPromise from 'bluebird';
 
+async function deleteJob(info){
+	const header = {
+		'Accept': "application/json",
+		'Content-Type': 'application/x-www-form-urlencoded'
+	};
+
+	const searchParams = new URLSearchParams(info);
+  
+	return await fetch("http://localhost:8080/remove-job", {
+		method: "POST",
+		headers: header,
+		body: searchParams
+	});
+}
+
 async function postJob(info){
 	const header = {
 		'Accept': "application/json",
@@ -28,10 +43,15 @@ function handleError(error){
 }
 
 module.exports = {
+
 	createJob: function(info){
 		return postJob(info).catch(handleError);
 	},
 	getjobs: function(){
 		return getjob().catch(handleError);
 	}
+	removeJob: function(info){
+		return deleteJob(info).catch(handleError);
+	}
 }
+
