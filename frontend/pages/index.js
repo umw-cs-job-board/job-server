@@ -1,5 +1,6 @@
 import React from "react";
 import {getjobs} from '../lib/utils.js'
+import {removeJob} from '../lib/utils.js'
 
 class Home extends React.Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class Home extends React.Component {
   }
 
   async delete(evt){
-    const deleted = await removeJob(id: this.state.id);
+    const deleted = await removeJob({id: this.state.id});
     console.log("delete job_id " + deleted);
     this.setState({deleted});
   }
@@ -57,13 +58,13 @@ class Home extends React.Component {
                     <tbody>
                       {this.state.jobs.rows.map((item, key) =>
                         <tr key={item.title}>
-                          <td onmouseover={this.setState({id: item.id})}>{item.title}</td>
+                          <td>{item.title}</td>
                           <td>{item.employer_name}</td>
                           <td>{item.location}</td>
                           <td>{item.start_date}</td>
                           <td>{item.end_date}</td>
                           <td>{item.description}</td>
-			  <td><button onClick={this.delete.bind(this)}>Delete</button> </td>
+			                    <td><button onClick={this.delete.bind(this)}>Delete</button> </td>
                         </tr>
                         )}
                       

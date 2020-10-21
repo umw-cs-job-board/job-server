@@ -49,7 +49,7 @@ module.exports = {
 	},
 	getjobs: function(){
 		return getjob().catch(handleError);
-	}
+	},
 	removeJob: function(info){
 		return deleteJob(info).catch(handleError);
 	}
