@@ -18,6 +18,12 @@ class Home extends React.Component {
     this.setState({jobs});
   }
 
+  async delete(evt){
+    const deleted = await removeJob(id: this.state.id);
+    console.log("delete job_id " + deleted);
+    this.setState({deleted});
+  }
+
   render() {
     return (
         <div>
