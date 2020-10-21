@@ -96,8 +96,12 @@ app.post("/create-job", async (req, res) => {
 			res.json({ status : "job added" });
 			
 		}
-	} 
+	} catch (err) {
+		res.json({status: "error: listing not created"});
+		console.log(err);
+	}
 
+});
 
 app.listen(app.get("port"), () => {
 	console.log(`Find the server at: http://localhost:${app.get("port")}/`);
