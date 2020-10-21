@@ -16,6 +16,12 @@ async function postJob(info){
 	});
 }
 
+async function getjob(){
+	return await fetch("http://localhost:8080/").then(function(resp){
+		return resp.json();
+	})
+}
+
 function handleError(error){
 	console.warn(error);
 	return null;
@@ -24,5 +30,8 @@ function handleError(error){
 module.exports = {
 	createJob: function(info){
 		return postJob(info).catch(handleError);
+	},
+	getjobs: function(){
+		return getjob().catch(handleError);
 	}
 }

@@ -1,11 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const cors = require("cors");
 
 app.set("port", 8080);
 app.use(bodyParser.json({ type: "application/json" }));
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(cors());
 
 //new user: jbuser, password: $3Lxq#r37
 //Login using: psql -h localhost -U jbuser jobboard
