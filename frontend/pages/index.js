@@ -57,12 +57,13 @@ class Home extends React.Component {
                     <tbody>
                       {this.state.jobs.rows.map((item, key) =>
                         <tr key={item.title}>
-                          <td>{item.title}</td>
+                          <td onmouseover={this.setState({id: item.id})}>{item.title}</td>
                           <td>{item.employer_name}</td>
                           <td>{item.location}</td>
                           <td>{item.start_date}</td>
                           <td>{item.end_date}</td>
                           <td>{item.description}</td>
+			  <td><button onClick={this.delete.bind(this)}>Delete</button> </td>
                         </tr>
                         )}
                       

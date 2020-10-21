@@ -22,7 +22,7 @@ const pool = new Pool(config);
 
 app.get("/", async (req, res) => {
 	try {
-		const template = "SELECT title, employer_name, location, start_date, end_date, description FROM jobs";
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs";
 		const response = await pool.query(template);
 		res.json(response);
 		} catch (err) {
@@ -96,7 +96,11 @@ app.post("/create-job", async (req, res) => {
 			res.json({ status : "job added" });
 			
 		}
-	} 
+	} catch (err) {
+		res.json({status: "error: job not posted"});
+		console.log(err);
+	}
+});
 
 
 app.listen(app.get("port"), () => {
