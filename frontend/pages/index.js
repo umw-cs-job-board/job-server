@@ -52,7 +52,7 @@ class Home extends React.Component {
                       {this.state.jobs.rows.map((item, key) =>
                         <tr key={item.title}>
                           <td>{item.title}</td>
-                          <td>{item.employer}</td>
+                          <td>{item.employer_name}</td>
                           <td>{item.location}</td>
                           <td>{item.start_date}</td>
                           <td>{item.end_date}</td>
