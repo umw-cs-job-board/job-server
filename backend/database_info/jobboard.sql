@@ -13,3 +13,4 @@ CREATE TABLE jobs
 	description VARCHAR NOT NULL
 );
 GRANT SELECT, INSERT, DELETE ON jobs TO jbuser;
+GRANT USAGE ON jobs_id_seq TO jbuser;
