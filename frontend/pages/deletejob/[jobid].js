@@ -24,6 +24,9 @@ const Post = props => {
     <button onClick={() => {removeJob({id:props.result.id})}}>DELETE</button>
     </Link>
 
+    <Link href="../viewjob/[props.result.id]" as={`../viewjob/${props.result.id}`} >
+    <button>CANCEL</button>
+    </Link>
 
 
 
