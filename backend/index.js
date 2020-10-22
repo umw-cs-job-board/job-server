@@ -43,16 +43,8 @@ app.get("/search", async(req, res) =>{
 				template = "SELECT * FROM jobs WHERE location ILIKE $1";
 				response = await pool.query(template, [`%${query}%`]);
 				if(response.rowCount == 0){
-					template = "SELECT * FROM jobs WHERE start_date ILIKE $1";
+					template = "SELECT * FROM jobs WHERE description ILIKE $1";
 					response = await pool.query(template, [`%${query}%`]);
-					if(response.rowCount == 0){
-						template = "SELECT * FROM jobs WHERE end_date ILIKE $1";
-						response = await pool.query(template, [`%${query}%`]);
-						if(response.rowCount == 0){
-							template = "SELECT * FROM jobs WHERE description ILIKE $1";
-							response = await pool.query(template, [`%${query}%`]);
-						}
-					}
 				}
 			}
 		}
