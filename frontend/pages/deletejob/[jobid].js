@@ -1,5 +1,6 @@
-import { findjobbyid, deleteJob } from '../../lib/utils.js';
+import { findjobbyid, removeJob } from '../../lib/utils.js';
 import Link from 'next/link';
+import { useHistory } from 'react-router-dom';
 
 
 
@@ -11,7 +12,7 @@ import Link from 'next/link';
 const Post = props => { 
 
 
-
+  const history = useHistory();
 
   return (
 
@@ -24,15 +25,19 @@ const Post = props => {
   	<p>Expiration date: {props.result.end_date}</p>
   	<p>Job description: {props.result.description}</p>
 
-<p>ARE YOU SURE YOU WANT TO DELETE THIS JOB? (
-	<Link href="../">
-    <a>YES</a>
-    </Link> OR <Link href="../viewjob/[props.result.id]" as={`../viewjob/${props.result.id}`} >
-    <a>NO</a>
-    </Link>)
+    <p>ARE YOU SURE YOU WANT TO DELETE THIS JOB?           
+    
+    <Link href="../" as={`../`} >
+    <button onClick={() => {removeJob(props.result.id)}}>DELETE</button>
+    </Link>
+
+    <Link href="../viewjob/[props.result.id]" as={`../viewjob/${props.result.id}`} >
+    <button>CANCEL</button>
+    </Link>
+
+
+
   	</p>
-
-
 
 
   	</div>
@@ -42,7 +47,7 @@ const Post = props => {
 }
 
 
-
+//this is used to preload the search to find the job so it doesn't have problems trying to read an unfullfilled promise
 Post.getInitialProps = async ({ query }) => {
 
 

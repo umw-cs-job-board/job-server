@@ -17,9 +17,13 @@ const Post = props => {
   	<p>Expiration date: {props.result.end_date}</p>
   	<p>Job description: {props.result.description}</p>
   	<p>
+
+
 	<Link href="../deletejob/[props.result.id]" as={`../deletejob/${props.result.id}`} >
-    <a>DELETE THIS JOB</a>
+    <button>DELETE THIS JOB</button>
     </Link>
+
+
   	</p>
   	</div>
 
