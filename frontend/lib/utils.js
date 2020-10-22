@@ -2,6 +2,9 @@ require("isomorphic-fetch");
 import BPromise from 'bluebird';
 
 async function deleteJob(info){
+
+	console.log("running deleteJob in utils.js");
+
 	const header = {
 		'Accept': "application/json",
 		'Content-Type': 'application/x-www-form-urlencoded'

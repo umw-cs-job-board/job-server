@@ -56,6 +56,8 @@ app.get("/find-job-by-id", async (req, res) => {
 //Remove Job
 app.delete("/remove-job", async (req, res) => {
 	const id = req.body.id;
+	console.log("running remove job api");
+	
 	try {
 		//Creating a query to check if the job to be removed exists in the job database.
 		const template1 = "SELECT title FROM jobs WHERE id = $1";
