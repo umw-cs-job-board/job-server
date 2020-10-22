@@ -3,6 +3,9 @@ import Link from 'next/link';
 
 const Post = props => { 
 
+
+
+
     return (
 
         <div>
@@ -18,12 +21,10 @@ const Post = props => {
     <p>ARE YOU SURE YOU WANT TO DELETE THIS JOB?           
     
     <Link href="../" as={`../`} >
-    <button onClick={() => {removeJob(props.result.id)}}>DELETE</button>
+    <button onClick={() => {removeJob({id:props.result.id})}}>DELETE</button>
     </Link>
 
-    <Link href="../viewjob/[props.result.id]" as={`../viewjob/${props.result.id}`} >
-    <button>CANCEL</button>
-    </Link>
+
 
 
 
