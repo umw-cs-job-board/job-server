@@ -3,6 +3,9 @@ import Link from 'next/link';
 
 const Post = props => { 
 
+
+
+
     return (
 
         <div>
@@ -14,20 +17,31 @@ const Post = props => {
           	<p>Expiration date: {props.result.end_date}</p>
           	<p>Job description: {props.result.description}</p>
 
-            <p>ARE YOU SURE YOU WANT TO DELETE THIS JOB? (
-                <Link href="../"><button>YES</button></Link>
-                OR
-                <Link href="../viewjob/[props.result.id]" as={`../viewjob/${props.result.id}`} >
-                    <button>NO</button>
-                </Link>)
-            </p>
 
-       </div>
+    <p>ARE YOU SURE YOU WANT TO DELETE THIS JOB?           
+    
+    <Link href="../" as={`../`} >
+    <button onClick={() => {removeJob({id:props.result.id})}}>DELETE</button>
+    </Link>
 
-    )
+    <Link href="../viewjob/[props.result.id]" as={`../viewjob/${props.result.id}`} >
+    <button>CANCEL</button>
+    </Link>
+
+
+
+
+  	</p>
+
+
+  	</div>
+
+  	)
 
 }
 
+
+//this is used to preload the search to find the job so it doesn't have problems trying to read an unfullfilled promise
 Post.getInitialProps = async ({ query }) => {
     console.log("query.jobid ");
     console.log(query.jobid);

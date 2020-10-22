@@ -13,7 +13,7 @@ async function deleteJob(info){
 	const searchParams = new URLSearchParams(info);
   
 	return await fetch("http://localhost:8080/remove-job", {
-		method: "POST",
+		method: "DELETE",
 		headers: header,
 		body: searchParams
 	});
