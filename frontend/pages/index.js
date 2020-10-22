@@ -1,7 +1,7 @@
 import React from "react";
 import {getjobs} from '../lib/utils.js'
+import {removeJob} from '../lib/utils.js'
 import Link from 'next/link';
-
 
 class Home extends React.Component {
   constructor(props) {
@@ -18,6 +18,12 @@ class Home extends React.Component {
     this.setState({search: evt.target.value});
     const jobs = await getjobs();
     this.setState({jobs});
+  }
+
+  async delete(evt){
+    const deleted = await removeJob({id: this.state.id});
+    console.log("delete job_id " + deleted);
+    this.setState({deleted});
   }
 
   render() {
@@ -67,6 +73,7 @@ class Home extends React.Component {
                           <td>{item.start_date}</td>
                           <td>{item.end_date}</td>
                           <td>{item.description}</td>
+			                    <td><button onClick={this.delete.bind(this)}>Delete</button> </td>
                         </tr>
                         )}
                       
@@ -75,10 +82,7 @@ class Home extends React.Component {
 
 
               </div> : null}
-
-              
-
-<div>
+          <div>
               <style jsx>{`
                   h1{
                     color:black; 
