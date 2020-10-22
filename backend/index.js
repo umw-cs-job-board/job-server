@@ -75,14 +75,16 @@ app.delete("/remove-job", async (req, res) => {
 
 		//If no job is found in the job database matching the id, then error.
 		if (response1.rowCount == 0) {
+			console.log("job not found");
 			res.json({ status: "error: not found"});
 		} 
 		//If the job does exist in the job database, then delete it.
 		else {
-			res.json({ status: "ok", results: response1.rows[0] });
-			console.log(err);
+			//res.json({ status: "ok", results: response1.rows[0] });
+			//console.log(err);
 			const template2 = "DELETE FROM jobs WHERE id = $1";
-			const response1 = await pool.query(template2, id);
+			const response1 = await pool.query(template2, [id]);
+			console.log("deleting job");
 			res.json({status: "listing deleted"});
 		}
 	} catch (err) {
