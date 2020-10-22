@@ -14,6 +14,12 @@ class Home extends React.Component {
     this.setState({jobs});
   }
 
+  async componentWillRender() {
+    const jobs = await getjobs();
+    this.setState({jobs});
+  }
+
+
   async handleSearch(evt){
     this.setState({search: evt.target.value});
     const jobs = await getjobs();
