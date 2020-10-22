@@ -20,11 +20,25 @@ const config = {
 
 const pool = new Pool(config);
 
+var dateFormat = require('dateformat');
+
 app.get("/", async (req, res) => {
 	try {
 		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs";
 		const response = await pool.query(template);
-		res.json(response);
+		const joblist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				title: item.title,
+				employer_name: item.employer_name,
+				location: item.location,
+				start_date: dateFormat(item.start_date, "isoDate"),
+				end_date: dateFormat(item.end_date, "isoDate"),
+				description: item.description
+			}
+		});
+		const ret = {rows: joblist}
+		res.json(ret);
 		} catch (err) {
 			res.json({ status: "error" });
 			console.log(err);
@@ -48,7 +62,19 @@ app.get("/search", async(req, res) =>{
 				}
 			}
 		}
-		res.json(response);
+		const joblist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				title: item.title,
+				employer_name: item.employer_name,
+				location: item.location,
+				start_date: dateFormat(item.start_date, "isoDate"),
+				end_date: dateFormat(item.end_date, "isoDate"),
+				description: item.description
+			}
+		});
+		const ret = {rows: joblist}
+		res.json(ret);
 	}catch(err){
 		console.error(err);
 	}
@@ -63,7 +89,20 @@ app.get("/find-job-by-id", async (req, res) => {
 
 		console.log(response);
 
-		res.json(response);
+		const joblist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				title: item.title,
+				employer_name: item.employer_name,
+				location: item.location,
+				start_date: dateFormat(item.start_date, "isoDate"),
+				end_date: dateFormat(item.end_date, "isoDate"),
+				description: item.description
+			}
+		});
+		const ret = {rows: joblist}
+
+		res.json(ret);
 		} catch (err) {
 			res.json({ status: "error" });
 			console.log(err);
@@ -140,7 +179,7 @@ app.post("/create-job", async (req, res) => {
 			
 			console.log("job about to be added");
 
-			const template2 = "INSERT INTO jobs (title, employer_name, location, start_date, end_date, description) VALUES ($1, $2, $3, TO_DATE($4, 'MM/DD/YYYY'), TO_DATE($5, 'MM/DD/YYYY'), $6)";
+			const template2 = "INSERT INTO jobs (title, employer_name, location, start_date, end_date, description) VALUES ($1, $2, $3, TO_DATE($4, 'YYYY-MM-DD'), TO_DATE($5, 'YYYY-MM-DD'), $6)";
 			const response2 = await pool.query(template2, [
 				title_to_add,
 				employer_name_to_add,
@@ -150,11 +189,12 @@ app.post("/create-job", async (req, res) => {
 				description_to_add
 				]);
 			console.log("job added");
-			res.json({ status : "job added" });
+			res.json({ "status" : "job added" });
 			
 		}
 	} catch (err) {
-		res.json({status: "error: listing not created"});
+		res.sendStatus(400);
+
 		console.log(err);
 	}
 

@@ -46,7 +46,7 @@ class Home extends React.Component {
 
               </div>
 
-              <p><input type='text' value={this.state.search} onChange={this.handleSearch.bind(this)}/></p>
+              <p>Search: <input type='text' size="70" value={this.state.search} onChange={this.handleSearch.bind(this)}/></p>
 
               {this.state.jobs ? <div>
 
@@ -98,8 +98,7 @@ class Home extends React.Component {
                     textAlign: "center";
                     padding: "0 px";
                   }
-                  h2,
-                  a{
+                  h2, a{
                     font-family: "Arial";
                     textAlign: "center";
                     color: black;
@@ -140,11 +139,12 @@ class Home extends React.Component {
                     font-family: arial, sans-serif;
                     border-collapse: collapse;
                     width: 100%;
+                    border: 1px solid black;
                   }
                   td, th {
-                    border: 1px solid #ffffff;
+                    border: 1px solid black;
                     text-align: left;
-                    padding: 8px;
+                    padding: 10px;
                   }
                   tr:nth-child(even) {
                     background-color: #dddddd;
