@@ -31,9 +31,33 @@ app.get("/", async (req, res) => {
 		}
 });
 
+
+
+app.get("/find-job-by-id", async (req, res) => {
+	const id = req.query.id;
+	console.log(id);
+	try {
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs WHERE id = $1";
+		const response = await pool.query(template, [id]);
+
+		console.log(response);
+
+		res.json(response);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
+
+
+
+
+
 //Remove Job
 app.delete("/remove-job", async (req, res) => {
 	const id = req.body.id;
+	console.log("running remove job api");
+	
 	try {
 		//Creating a query to check if the job to be removed exists in the job database.
 		const template1 = "SELECT title FROM jobs WHERE id = $1";
@@ -97,11 +121,11 @@ app.post("/create-job", async (req, res) => {
 			
 		}
 	} catch (err) {
-		res.json({status: "error: job not posted"});
+		res.json({status: "error: listing not created"});
 		console.log(err);
 	}
-});
 
+});
 
 app.listen(app.get("port"), () => {
 	console.log(`Find the server at: http://localhost:${app.get("port")}/`);
