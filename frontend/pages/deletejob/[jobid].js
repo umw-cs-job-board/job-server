@@ -1,4 +1,4 @@
-import { findjobbyid, deleteJob } from '../../lib/utils.js';
+import { findjobbyid, removeJob } from '../../lib/utils.js';
 import Link from 'next/link';
 
 const Post = props => { 
@@ -29,8 +29,6 @@ const Post = props => {
 }
 
 Post.getInitialProps = async ({ query }) => {
-
-
     console.log("query.jobid ");
     console.log(query.jobid);
     const jobtofind =  await findjobbyid(query.jobid);
