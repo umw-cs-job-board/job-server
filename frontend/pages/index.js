@@ -1,5 +1,6 @@
 import React from "react";
 import {getjobs} from '../lib/utils.js'
+import {search} from '../lib/utils.js'
 import {removeJob} from '../lib/utils.js'
 import Link from 'next/link';
 
@@ -22,7 +23,7 @@ class Home extends React.Component {
 
   async handleSearch(evt){
     this.setState({search: evt.target.value});
-    const jobs = await getjobs();
+    const jobs = await search(evt.target.value);
     this.setState({jobs});
   }
 

@@ -19,18 +19,12 @@ async function deleteJob(info){
 	});
 }
 
-
-
-
 async function findjobbyid(idnum){
 	return await fetch(`http://localhost:8080/find-job-by-id?id=${idnum}`).then(function(resp){
 		console.log("idnum " + idnum);
 		return resp.json();
 	})
 }
-
-
-
 
 async function postJob(info){
 	const header = {
@@ -50,7 +44,13 @@ async function postJob(info){
 async function getjob(){
 	return await fetch("http://localhost:8080/").then(function(resp){
 		return resp.json();
-	})
+	});
+}
+
+async function searchJobs(query){
+	return await fetch(`http://localhost:8080/search?q=${query}`).then(function(resp){
+		return resp.json();
+	});
 }
 
 function handleError(error){
@@ -68,6 +68,9 @@ module.exports = {
 	},
 	getjobs: function(){
 		return getjob().catch(handleError);
+	},
+	search: function(query){
+		return searchJobs(query).catch(handleError);
 	},
 	removeJob: function(info){
 		return deleteJob(info).catch(handleError);

@@ -31,7 +31,36 @@ app.get("/", async (req, res) => {
 		}
 });
 
-
+app.get("/search", async(req, res) =>{
+	const query = req.query.q;
+	try{
+		let template = "SELECT * FROM jobs WHERE title ILIKE $1";
+		let response = await pool.query(template, [`%${query}%`]);
+		if(response.rowCount == 0){
+			template = "SELECT * FROM jobs WHERE employer_name ILIKE $1";
+			response = await pool.query(template, [`%${query}%`]);
+			if(response.rowCount == 0){
+				template = "SELECT * FROM jobs WHERE location ILIKE $1";
+				response = await pool.query(template, [`%${query}%`]);
+				if(response.rowCount == 0){
+					template = "SELECT * FROM jobs WHERE start_date ILIKE $1";
+					response = await pool.query(template, [`%${query}%`]);
+					if(response.rowCount == 0){
+						template = "SELECT * FROM jobs WHERE end_date ILIKE $1";
+						response = await pool.query(template, [`%${query}%`]);
+						if(response.rowCount == 0){
+							template = "SELECT * FROM jobs WHERE description ILIKE $1";
+							response = await pool.query(template, [`%${query}%`]);
+						}
+					}
+				}
+			}
+		}
+		res.json(response);
+	}catch(err){
+		console.error(err);
+	}
+});
 
 app.get("/find-job-by-id", async (req, res) => {
 	const id = req.query.id;
