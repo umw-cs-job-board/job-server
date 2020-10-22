@@ -14,6 +14,12 @@ class Home extends React.Component {
     this.setState({jobs});
   }
 
+  async componentWillRender() {
+    const jobs = await getjobs();
+    this.setState({jobs});
+  }
+
+
   async handleSearch(evt){
     this.setState({search: evt.target.value});
     const jobs = await getjobs();
@@ -53,7 +59,6 @@ class Home extends React.Component {
                         <th>Location</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Description</th>
                       </tr>
                       </thead>
                     <tbody>
@@ -72,8 +77,7 @@ class Home extends React.Component {
                           <td>{item.location}</td>
                           <td>{item.start_date}</td>
                           <td>{item.end_date}</td>
-                          <td>{item.description}</td>
-			                    <td><button onClick={this.delete.bind(this)}>Delete</button> </td>
+
                         </tr>
                         )}
                       
