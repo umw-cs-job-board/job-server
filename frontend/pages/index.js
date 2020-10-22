@@ -59,7 +59,6 @@ class Home extends React.Component {
                         <th>Location</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Description</th>
                       </tr>
                       </thead>
                     <tbody>
@@ -78,8 +77,7 @@ class Home extends React.Component {
                           <td>{item.location}</td>
                           <td>{item.start_date}</td>
                           <td>{item.end_date}</td>
-                          <td>{item.description}</td>
-			                    <td><button onClick={this.delete.bind(this)}>Delete</button> </td>
+
                         </tr>
                         )}
                       
