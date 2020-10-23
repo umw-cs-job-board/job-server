@@ -24,7 +24,7 @@ var dateFormat = require('dateformat');
 
 app.get("/", async (req, res) => {
 	try {
-		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs";
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs ORDER BY start_date ASC";
 		const response = await pool.query(template);
 		const joblist = response.rows.map(function(item){
 			return{
@@ -48,16 +48,16 @@ app.get("/", async (req, res) => {
 app.get("/search", async(req, res) =>{
 	const query = req.query.q;
 	try{
-		let template = "SELECT * FROM jobs WHERE title ILIKE $1";
+		let template = "SELECT * FROM jobs WHERE title ILIKE $1 ORDER BY start_date ASC";
 		let response = await pool.query(template, [`%${query}%`]);
 		if(response.rowCount == 0){
-			template = "SELECT * FROM jobs WHERE employer_name ILIKE $1";
+			template = "SELECT * FROM jobs WHERE employer_name ILIKE $1 ORDER BY start_date ASC";
 			response = await pool.query(template, [`%${query}%`]);
 			if(response.rowCount == 0){
-				template = "SELECT * FROM jobs WHERE location ILIKE $1";
+				template = "SELECT * FROM jobs WHERE location ILIKE $1 ORDER BY start_date ASC";
 				response = await pool.query(template, [`%${query}%`]);
 				if(response.rowCount == 0){
-					template = "SELECT * FROM jobs WHERE description ILIKE $1";
+					template = "SELECT * FROM jobs WHERE description ILIKE $1 ORDER BY start_date ASC";
 					response = await pool.query(template, [`%${query}%`]);
 				}
 			}
@@ -84,7 +84,7 @@ app.get("/find-job-by-id", async (req, res) => {
 	const id = req.query.id;
 	console.log(id);
 	try {
-		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs WHERE id = $1";
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs WHERE id = $1 ORDER BY start_date ASC";
 		const response = await pool.query(template, [id]);
 
 		console.log(response);
