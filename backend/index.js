@@ -22,7 +22,7 @@ const pool = new Pool(config);
 
 var dateFormat = require('dateformat');
 
-app.get("/", async (req, res) => {
+app.get("/api", async (req, res) => {
 	try {
 		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs ORDER BY start_date ASC";
 		const response = await pool.query(template);
@@ -45,7 +45,7 @@ app.get("/", async (req, res) => {
 		}
 });
 
-app.get("/search", async(req, res) =>{
+app.get("/api/search", async(req, res) =>{
 	const query = req.query.q;
 	try{
 		let template = "SELECT * FROM jobs WHERE title ILIKE $1 ORDER BY start_date ASC";
@@ -80,7 +80,7 @@ app.get("/search", async(req, res) =>{
 	}
 });
 
-app.get("/find-job-by-id", async (req, res) => {
+app.get("/api/find-job-by-id", async (req, res) => {
 	const id = req.query.id;
 	console.log(id);
 	try {
@@ -114,7 +114,7 @@ app.get("/find-job-by-id", async (req, res) => {
 
 
 //Remove Job
-app.delete("/remove-job", async (req, res) => {
+app.delete("/api/remove-job", async (req, res) => {
 	const id = req.body.id;
 	console.log("running remove job api");
 	
@@ -154,7 +154,7 @@ app.delete("/remove-job", async (req, res) => {
 });
 
 //create job and add it to the database
-app.post("/create-job", async (req, res) => {
+app.post("/api/create-job", async (req, res) => {
 
 	console.log("----------");
 

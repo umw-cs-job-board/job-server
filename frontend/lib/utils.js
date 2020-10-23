@@ -12,7 +12,7 @@ async function deleteJob(info){
 
 	const searchParams = new URLSearchParams(info);
   
-	return await fetch("http://localhost:8080/remove-job", {
+	return await fetch("http://34.123.48.219:8080/api/remove-job", {
 		method: "DELETE",
 		headers: header,
 		body: searchParams
@@ -20,7 +20,7 @@ async function deleteJob(info){
 }
 
 async function findjobbyid(idnum){
-	return await fetch(`http://localhost:8080/find-job-by-id?id=${idnum}`).then(function(resp){
+	return await fetch(`http://34.123.48.219:8080/api/find-job-by-id?id=${idnum}`).then(function(resp){
 		console.log("idnum " + idnum);
 		return resp.json();
 	})
@@ -34,7 +34,7 @@ async function postJob(info){
 
 	const searchParams = new URLSearchParams(info);
 
-	return await fetch("http://localhost:8080/create-job", {
+	return await fetch("http://34.123.48.219:8080/api/create-job", {
 		method: "POST",
 		headers: header,
 		body: searchParams
@@ -42,13 +42,13 @@ async function postJob(info){
 }
 
 async function getjob(){
-	return await fetch("http://localhost:8080/").then(function(resp){
+	return await fetch("http://34.123.48.219:8080/api").then(function(resp){
 		return resp.json();
 	});
 }
 
 async function searchJobs(query){
-	return await fetch(`http://localhost:8080/search?q=${query}`).then(function(resp){
+	return await fetch(`http://34.123.48.219:8080/api/search?q=${query}`).then(function(resp){
 		return resp.json();
 	});
 }
