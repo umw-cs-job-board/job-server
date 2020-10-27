@@ -1,9 +1,14 @@
 import { findjobbyid } from '../../lib/utils.js';
 import Link from 'next/link';
+import MyLayout from '../../components/mylayout.js';
+import Button from 'react-bootstrap/Button';
+
 
 const Post = props => { 
 
     return (
+
+      <MyLayout>
 
     <div>
         <h1>Job title: {props.result.title}</h1>
@@ -15,16 +20,18 @@ const Post = props => {
 
         <p>
             <Link href="../deletejob/[props.result.id]" as={`../deletejob/${props.result.id}`} >
-                <button>DELETE THIS JOB</button>
+                <Button>DELETE THIS JOB</Button>
             </Link>
         </p>
     </div>
+  </MyLayout>
 
 
     )
 
 }
 
+//this is used to preload the search to find the job so it doesn't have problems trying to read an unfullfilled promise
 Post.getInitialProps = async ({ query }) => {
 
     console.log("query.jobid ");

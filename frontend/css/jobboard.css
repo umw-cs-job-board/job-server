@@ -1,0 +1,73 @@
+
+
+
+.sharpcorners 
+{
+	border-radius:0;
+}
+
+
+
+.lightbluebg
+{
+	background-color:#EEEEFF; 
+}
+
+
+
+.myfooter
+{
+	padding:30px; 
+	text-align:center; 
+}
+
+
+.mypaddedbody 
+{
+  padding-top:56px;
+}
+
+
+.bgdarkblue1 {
+    background-color: #005a87!important;
+}
+
+
+
+.bgdarkblue2 {
+    background-color: #4C6A8B!important;
+}
+
+.bgmedblue {
+    background-color: #002b5a!important;
+}
+
+.bglightblue {
+    background-color: #EEEEFF!important;
+}
+
+.bgwhite {
+    background-color: #FFFFFF!important;
+}
+
+
+.bglightblueshaded {
+    background-color: #EEEEFF!important;
+    opacity: 0.5;
+}
+
+
+.box {
+ 	padding:30px; 
+}
+
+.boxsmall {
+ 	padding:10px; 
+ 	display:inline-block;
+}
+
+
+.tab {
+ 	margin-bottom:20px; 
+}
+

@@ -1,6 +1,11 @@
 import React from 'react'
 import {createJob} from '../lib/utils.js';
 
+import MyLayout from '../components/mylayout.js';
+
+import Button from 'react-bootstrap/Button';
+
+
 class PostJob extends React.Component{
 
 	constructor(props){
@@ -47,7 +52,11 @@ class PostJob extends React.Component{
 
 	render(){
 		return(
+			<MyLayout current="post_job">
 			<div>
+
+				<br />
+
 				<h1>Post Job</h1>
 				<p>Company name</p>
 				<input placeholder = 'Google' type="text" value={this.state.employer_name} onChange={this.updateEmployer.bind(this)} />
@@ -75,12 +84,14 @@ class PostJob extends React.Component{
 					: null
 				}
 				<style jsx>{`
-					div{
-						text-align: center;
-						font-family: Arial;
-					}
+					
+
+
+
+
 				`}</style>
 			</div>
+			</MyLayout>
 		);
 	}
 
