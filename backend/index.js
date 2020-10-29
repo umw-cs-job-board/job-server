@@ -200,6 +200,93 @@ app.post("/create-job", async (req, res) => {
 
 });
 
+
+
+
+
+
+
+
+//given username and password, return name and zip if found
+
+app.post("/check-login", async (req, res) => 
+{
+	const employer_email = req.body.email;
+	const employer_password = req.body.password;
+	
+	//console.log(req.body);
+	//console.log(employer_email);
+	//console.log(employer_password);
+
+	try 
+	{
+		const template2 = "SELECT * FROM employers WHERE email = $1";
+		const result = await pool.query(template2, [ employer_email ]);
+
+		//console.log("found user: ");
+		//console.log(result.rows);
+		//console.log(result.rowCount);
+		
+
+		if (result.rowCount == 1) 
+		{
+			//console.log("starting argon2 compare");
+			//console.log(password);
+			//console.log(result.rows[0].password);
+
+			//I took out the argon2 encryption for now -- james
+			//if (await argon2.verify(result.rows[0].user_password, password)) {
+			if (result.rows[0].password == employer_password) {
+
+				console.log("Passwords match.");
+
+				//check to see if the login is by an admin
+				if (result.rows[0].email == "cpscinternshipproject@gmail.com") {
+					res.json({ status: "success",
+							email: result.rows[0].email,
+							password: result.rows[0].password,
+							name: result.rows[0].name,
+							location: result.rows[0].location,
+							industry: result.rows[0].industry,
+							description: result.rows[0].description,
+							user_type: "admin"
+					 });
+				}
+				else {
+					res.json({ status: "success",
+							email: result.rows[0].email,
+							password: result.rows[0].password,
+							name: result.rows[0].name,
+							location: result.rows[0].location,
+							industry: result.rows[0].industry,
+							description: result.rows[0].description,
+							user_type: "employer"
+					 });
+				}
+
+			} else {
+				console.log("password incorrect.");
+				res.json({ status: "password incorrect" });
+			}
+
+		}
+		else 
+		{
+			res.json({ status: "email incorrect" });
+		}
+		
+	} 
+	catch (err) 
+	{
+		console.log(err);
+	}
+
+});
+
+
+
+
+
 app.listen(app.get("port"), () => {
 	console.log(`Find the server at: http://localhost:${app.get("port")}/`);
 });
