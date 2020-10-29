@@ -37,7 +37,7 @@ CREATE TABLE employers
 GRANT SELECT, INSERT, DELETE ON employers TO jbuser;
 GRANT USAGE ON employers_id_seq TO jbuser;
 
-INSERT INTO employers(name, email, password, location, industry, description) VALUES ('UMW CPSC', 'umw-cs-job-board@gmail.com', 'admin', 'Fredericksburg, Va.', 'Academia', 'University of Mary Washington Computer Science Department');
+INSERT INTO employers(name, email, password, location, industry, description) VALUES ('UMW CPSC', 'cpscinternshipproject@gmail.com', 'admin', 'Fredericksburg, Va.', 'Academia', 'University of Mary Washington Computer Science Department');
 INSERT INTO employers(name, email, password, location, industry, description) VALUES ('AOL', 'aol@aol.com', 'test', 'Reston, Va.', 'Internet service provider', 'We are going to rule the world.');
 
 
