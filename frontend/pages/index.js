@@ -7,6 +7,8 @@ import Link from 'next/link';
 import MyLayout from '../components/mylayout.js';
 
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 
 class Home extends React.Component {
@@ -43,9 +45,23 @@ class Home extends React.Component {
       <MyLayout current="home">
         
         <div>
-                <br />
+              <br />
                
-              <p>Search: <input type='text' size="70" value={this.state.search} onChange={this.handleSearch.bind(this)}/></p>
+
+
+              <Form> 
+
+                <InputGroup className="mb-2 mr-sm-2">
+                  <InputGroup.Prepend>
+                    <InputGroup.Text>SEARCH</InputGroup.Text>
+                  </InputGroup.Prepend>
+                  <Form.Control type='text' size="70" value={this.state.search} onChange={this.handleSearch.bind(this)}/>
+                </InputGroup>
+
+              </Form>
+
+
+
 
               {this.state.jobs ? <div>
 
