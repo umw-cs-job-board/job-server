@@ -29,6 +29,13 @@ const MyLayout = (props) => (
 			    Post a job 
 		    </span></Nav.Link>
 		  </Nav.Item>
+
+		  <Nav.Item>
+		    <Nav.Link href="/login" eventKey="link-2"><span className="navspan login">
+			    Log in 
+		    </span></Nav.Link>
+		  </Nav.Item>
+
 		
 		</Nav>
 
