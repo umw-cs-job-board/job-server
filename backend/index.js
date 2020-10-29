@@ -207,7 +207,7 @@ app.post("/create-job", async (req, res) => {
 
 
 
-//given username and password, return name and zip if found
+//checks email and password, returns status, user's info and whether they are admin or employer
 
 app.post("/check-login", async (req, res) => 
 {
@@ -282,6 +282,8 @@ app.post("/check-login", async (req, res) =>
 	}
 
 });
+
+
 
 
 
