@@ -6,9 +6,9 @@ import Link from 'next/link';
 
 import MyLayout from '../components/mylayout.js';
 
+import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
+
 
 
 class Home extends React.Component {
@@ -42,26 +42,14 @@ class Home extends React.Component {
 
   render() {
     return (
-      <MyLayout current="home">
-        
+      <MyLayout>
+
+
+
         <div>
               <br />
-               
-
-
-              <Form> 
-
-                <InputGroup className="mb-2 mr-sm-2">
-                  <InputGroup.Prepend>
-                    <InputGroup.Text>SEARCH</InputGroup.Text>
-                  </InputGroup.Prepend>
-                  <Form.Control type='text' size="70" value={this.state.search} onChange={this.handleSearch.bind(this)}/>
-                </InputGroup>
-
-              </Form>
-
-
-
+              <br />
+              <p>Search: <input type='text' size="70" value={this.state.search} onChange={this.handleSearch.bind(this)}/></p>
 
               {this.state.jobs ? <div>
 
@@ -101,19 +89,30 @@ class Home extends React.Component {
                   </Table>
 
 
+
+                  <Button>Random button is random</Button>
+
+                  <Button className="btn-dark">Random button is random</Button>
+
+
               </div> : null}
           <div>
               <style jsx>{`
-                  
 
 
-              `}</style>
+
+
+                `}</style>
               </div>
               </div>
-                    </MyLayout>
+            </MyLayout>
 
     );
+
+
+
   }
+
 }
 
 export default Home;

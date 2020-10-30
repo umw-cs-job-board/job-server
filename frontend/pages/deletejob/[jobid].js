@@ -1,5 +1,9 @@
 import { findjobbyid, removeJob } from '../../lib/utils.js';
 import Link from 'next/link';
+import MyLayout from '../../components/mylayout.js';
+import Button from 'react-bootstrap/Button';
+
+
 
 const Post = props => { 
 
@@ -7,6 +11,7 @@ const Post = props => {
 
 
     return (
+      <MyLayout>
 
         <div>
 
@@ -19,13 +24,13 @@ const Post = props => {
 
 
     <p>ARE YOU SURE YOU WANT TO DELETE THIS JOB?           
-    
+    &nbsp;
     <Link href="../" as={`../`} >
-    <button onClick={() => {removeJob({id:props.result.id})}}>DELETE</button>
+    <Button onClick={() => {removeJob({id:props.result.id}); alert("Job deleted.");}}>DELETE</Button>
     </Link>
-
+    &nbsp;
     <Link href="../viewjob/[props.result.id]" as={`../viewjob/${props.result.id}`} >
-    <button>CANCEL</button>
+    <Button>CANCEL</Button>
     </Link>
 
 
@@ -35,6 +40,7 @@ const Post = props => {
 
 
   	</div>
+  </MyLayout>
 
   	)
 

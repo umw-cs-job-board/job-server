@@ -34,7 +34,8 @@ app.get("/api", async (req, res) => {
 				location: item.location,
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
-				description: item.description
+				description: item.description,
+				employer_id: item.employer_id
 			}
 		});
 		const ret = {rows: joblist}
@@ -70,7 +71,8 @@ app.get("/api/search", async(req, res) =>{
 				location: item.location,
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
-				description: item.description
+				description: item.description,
+				employer_id: item.employer_id
 			}
 		});
 		const ret = {rows: joblist}
@@ -84,7 +86,7 @@ app.get("/api/find-job-by-id", async (req, res) => {
 	const id = req.query.id;
 	console.log(id);
 	try {
-		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs WHERE id = $1 ORDER BY start_date ASC";
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description, employer_id FROM jobs WHERE id = $1 ORDER BY start_date ASC";
 		const response = await pool.query(template, [id]);
 
 		console.log(response);
@@ -97,7 +99,9 @@ app.get("/api/find-job-by-id", async (req, res) => {
 				location: item.location,
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
-				description: item.description
+				description: item.description,
+				employer_id: item.employer_id
+
 			}
 		});
 		const ret = {rows: joblist}
@@ -168,6 +172,7 @@ app.post("/api/create-job", async (req, res) => {
 		const start_date_to_add = req.body.start_date;
 		const end_date_to_add = req.body.end_date;
 		const description_to_add = req.body.description;
+		const employer_id_to_add = req.body.employer_id;
 
 		//if parameter is missing while trying to add, return error
 		if (title_to_add == null || employer_name_to_add == null || location_to_add == null || start_date_to_add == null || end_date_to_add == null || description_to_add == null) {
@@ -179,14 +184,15 @@ app.post("/api/create-job", async (req, res) => {
 			
 			console.log("job about to be added");
 
-			const template2 = "INSERT INTO jobs (title, employer_name, location, start_date, end_date, description) VALUES ($1, $2, $3, TO_DATE($4, 'YYYY-MM-DD'), TO_DATE($5, 'YYYY-MM-DD'), $6)";
+			const template2 = "INSERT INTO jobs (title, employer_name, location, start_date, end_date, description, employer_id) VALUES ($1, $2, $3, TO_DATE($4, 'YYYY-MM-DD'), TO_DATE($5, 'YYYY-MM-DD'), $6, $7)";
 			const response2 = await pool.query(template2, [
 				title_to_add,
 				employer_name_to_add,
 				location_to_add,
 				start_date_to_add,
 				end_date_to_add,
-				description_to_add
+				description_to_add,
+				employer_id_to_add
 				]);
 			console.log("job added");
 			res.json({ "status" : "job added" });
@@ -199,6 +205,96 @@ app.post("/api/create-job", async (req, res) => {
 	}
 
 });
+
+
+
+
+
+
+
+
+//checks email and password, returns status, user's info and whether they are admin or employer
+
+app.post("/check-login", async (req, res) => 
+{
+	const employer_email = req.body.email;
+	const employer_password = req.body.password;
+	
+	//console.log(req.body);
+	//console.log(employer_email);
+	//console.log(employer_password);
+
+	try 
+	{
+		const template2 = "SELECT * FROM employers WHERE email = $1";
+		const result = await pool.query(template2, [ employer_email ]);
+
+		//console.log("found user: ");
+		//console.log(result.rows);
+		//console.log(result.rowCount);
+		
+
+		if (result.rowCount == 1) 
+		{
+			//console.log("starting argon2 compare");
+			//console.log(password);
+			//console.log(result.rows[0].password);
+
+			//I took out the argon2 encryption for now -- james
+			//if (await argon2.verify(result.rows[0].user_password, password)) {
+			if (result.rows[0].password == employer_password) {
+
+				console.log("Passwords match.");
+
+				//check to see if the login is by an admin
+				if (result.rows[0].email == "cpscinternshipproject@gmail.com") {
+					res.json({ status: "success",
+							email: result.rows[0].email,
+							password: result.rows[0].password,
+							name: result.rows[0].name,
+							location: result.rows[0].location,
+							industry: result.rows[0].industry,
+							description: result.rows[0].description,
+							user_type: "admin"
+					 });
+				}
+				else {
+					res.json({ status: "success",
+							id: result.rows[0].id,
+							email: result.rows[0].email,
+							password: result.rows[0].password,
+							name: result.rows[0].name,
+							location: result.rows[0].location,
+							industry: result.rows[0].industry,
+							description: result.rows[0].description,
+							user_type: "employer"
+					 });
+				}
+
+			} else {
+				console.log("password incorrect.");
+				res.json({ status: "password incorrect" });
+			}
+
+		}
+		else 
+		{
+			res.json({ status: "email incorrect" });
+		}
+		
+	} 
+	catch (err) 
+	{
+		console.log(err);
+	}
+
+});
+
+
+
+
+
+
 
 app.listen(app.get("port"), () => {
 	console.log(`Find the server at: http://localhost:${app.get("port")}/`);

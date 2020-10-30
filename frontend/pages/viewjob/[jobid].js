@@ -1,9 +1,15 @@
 import { findjobbyid } from '../../lib/utils.js';
 import Link from 'next/link';
+import MyLayout from '../../components/mylayout.js';
+import Button from 'react-bootstrap/Button';
+import jsCookie from "js-cookie";
+
 
 const Post = props => { 
 
     return (
+
+      <MyLayout>
 
     <div>
         <h1>Job title: {props.result.title}</h1>
@@ -12,19 +18,23 @@ const Post = props => {
         <p>Post date: {props.result.start_date}</p>
         <p>Expiration date: {props.result.end_date}</p>
         <p>Job description: {props.result.description}</p>
-
-        <p>
-            <Link href="../deletejob/[props.result.id]" as={`../deletejob/${props.result.id}`} >
-                <button>DELETE THIS JOB</button>
-            </Link>
-        </p>
+        
+        { jsCookie.get("admin") || (jsCookie.get("employer") && jsCookie.get("id") == props.result.employer_id) ?
+            <p>
+                <Link href="../deletejob/[props.result.id]" as={`../deletejob/${props.result.id}`} >
+                    <Button>DELETE THIS JOB</Button>
+                </Link>
+            </p>
+        : null}
     </div>
+  </MyLayout>
 
 
     )
 
 }
 
+//this is used to preload the search to find the job so it doesn't have problems trying to read an unfullfilled promise
 Post.getInitialProps = async ({ query }) => {
 
     console.log("query.jobid ");
