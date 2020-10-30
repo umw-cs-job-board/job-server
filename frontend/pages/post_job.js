@@ -2,7 +2,7 @@ import React from 'react'
 import {createJob} from '../lib/utils.js';
 
 import MyLayout from '../components/mylayout.js';
-
+import jsCookie from "js-cookie";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
@@ -19,7 +19,7 @@ class PostJob extends React.Component{
         todayPlus30.setDate(todayPlus30.getDate() + 30);
         var todayDate = (today.getFullYear() + '-' + (today.getMonth()+1) + '-' +  today.getDate());
         var todayPlus30Date = (todayPlus30.getFullYear() + '-' + (todayPlus30.getMonth()+1) + '-' +  todayPlus30.getDate());
-		this.state={title:"", employer_name:"", location:"", start_date:todayDate, end_date:todayPlus30Date, description:""};
+		this.state={title:"", employer_name:(jsCookie.get("name")), location:"", start_date:todayDate, end_date:todayPlus30Date, description:"", id: jsCookie.get("id")};
 	}
 
 	async updateTitle(evt){
@@ -53,7 +53,8 @@ class PostJob extends React.Component{
 			location: this.state.location,
 			start_date: this.state.start_date,
 			end_date: this.state.end_date,
-			description: this.state.description
+			description: this.state.description,
+			employer_id: this.state.id
 		});
 		console.log("create job: " + create);
 		this.setState({create});
@@ -74,7 +75,7 @@ class PostJob extends React.Component{
 					<Col>
 						<Form.Group controlId="formCompanyName">
 						<Form.Label>Company name</Form.Label>
-						<Form.Control  placeholder = 'Google' type="text" value={this.state.employer_name} onChange={this.updateEmployer.bind(this)} />
+						<Form.Control type="text" value={this.state.employer_name} onChange={this.updateEmployer.bind(this)} />
 						</Form.Group>
 					</Col>
 					<Col>
