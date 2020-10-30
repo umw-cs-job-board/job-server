@@ -2,7 +2,10 @@
 //global CSS file can be found at ./css/jobboard.css. It is loaded using ./pages/_app.js
 
 import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 
+import jsCookie from "js-cookie";
+import Link from 'next/link';
 
 
 const MyLayout = (props) => (
@@ -10,35 +13,86 @@ const MyLayout = (props) => (
 
 	<div>
 		
+        {/* This is the navbar. If you want a nav link highlighted bold, it needs a className that is passed as a "current" prop from the page it is highlighted on. So on the home page it would be <MyLayout current="home">. navspan is link style. navdisplay is just text. */}
 
-        {/* This is the navbar. If you want a nav link highlighted bold, it needs a className that is passed as a "current" prop from the page it is highlighted on. So on the home page it would be <MyLayout current="home"> */}
+		      
+	<Navbar className="bgdarkblue1 fixed-top" bg="dark" variant="dark">
+		<Nav>
+			<Nav.Item>
+				<Nav.Link href="/"><span className="home">
+					Home 
+				</span></Nav.Link>
+			</Nav.Item>
 
-		<Nav style={{padding:"5px"}} 
-		  activeKey="./"
-		  onSelect={(selectedKey) => console.log(`selected ${selectedKey}`)}
-		  className="fixed-top bgdarkblue1">
 
-		  <Nav.Item>
-		    <Nav.Link href="/" eventKey="link-1"><span className="navspan home">
-		    	Home 
-		    </span></Nav.Link>
-		  </Nav.Item>
 
-		  <Nav.Item>
-		    <Nav.Link href="/post_job" eventKey="link-2"><span className="navspan post_job">
-			    Post a job 
-		    </span></Nav.Link>
-		  </Nav.Item>
+			{ jsCookie.get("name") ? 
+				
+			  <Nav.Item>
+			    <Nav.Link href="/post_job"><span className="post_job">
+				    Post a job 
+			    </span></Nav.Link>
+			  </Nav.Item>
+			  :
+			  <Nav.Item></Nav.Item>
+			 
+			}
 
-		  <Nav.Item>
-		    <Nav.Link href="/login" eventKey="link-2"><span className="navspan login">
-			    Log in 
-		    </span></Nav.Link>
-		  </Nav.Item>
 
-		
+
+			{ jsCookie.get("name") ? 	
+			  <Nav.Item>
+			    <Nav.Link href="/logout"><span className="logout">
+				    Log out 
+			    </span></Nav.Link>
+			  </Nav.Item>
+			  :
+			  <Nav.Item></Nav.Item>
+			}
+
+
+
+			{ jsCookie.get("name") ? 
+
+			<Nav.Item></Nav.Item>
+			:
+			<Nav.Item>
+			    <Nav.Link href="/login"><span className="login">
+				    Log in to post a job
+			    </span></Nav.Link>
+			</Nav.Item>
+
+			}
+
+		</Nav>
+		<Nav className="ml-auto">
+
+			{ jsCookie.get("admin") ? 
+
+				<Nav.Item className="d-inline-block">
+					<span className="navdisplay">Logged in as { jsCookie.get("name")} (admin) </span>
+				</Nav.Item>
+
+			:
+				<Nav.Item></Nav.Item>
+			}
+
+
+			{ jsCookie.get("employer") ? 
+			
+				<Nav.Item  className="d-inline-block">
+					<span className="navdisplay">Logged in as { jsCookie.get("name")} (employer) </span>
+				</Nav.Item>
+			:
+				<Nav.Item></Nav.Item>
+			
+			}
+
+
 		</Nav>
 
+
+	</Navbar>
 
 
 
@@ -69,6 +123,11 @@ const MyLayout = (props) => (
 					{props.children}
 
 
+
+
+      
+
+
 				</div>
 
 			</div>
@@ -96,6 +155,10 @@ const MyLayout = (props) => (
 				span.${props.current} {
 					color:#DDDDDD;
 					font-weight:bold;
+				}
+
+				span.navdisplay {
+					color:#DDDDDD;
 				}
 
 
