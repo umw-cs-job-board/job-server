@@ -5,18 +5,12 @@ require("isomorphic-fetch");
 import BPromise from "bluebird";
 
 import MyLayout from '../components/mylayout.js';
-
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-
 class Login extends React.Component {
-
-
-
-
 
 	async handleSearch(evt) {
 		console.log("starting handleSearch");
@@ -38,102 +32,97 @@ class Login extends React.Component {
 			jsCookie.set(loggedInUser.user_type, "true");
 			console.log("Cookies are set.")
 			Router.push("/");
-		} else {
+		}/* else {
 			Router.push("/wrongpassword");
 
-		}
+		}*/
+	}
+
+	//post request
+	//user_info is json object with email and password
+	postlogin(user_info) {
+		const header = {
+			Accept: "application/json",
+			"Content-Type": "application/x-www-form-urlencoded"
+		};
+		console.log(user_info);  
+		const searchParams = new URLSearchParams(user_info);
+
+		console.log(searchParams);  
+	  	return fetch("http://localhost:8080/check-login", {
+	  		method: "POST",
+	  		headers: header,
+	  		body: searchParams
+
+	  	}).then(function(resp) {
+	  		console.log("returning json");
+	  		return resp.json();
+	  	});
 	}
 
 
 
-//post request
-//user_info is json object with email and password
-postlogin(user_info) {
-	const header = {
-		Accept: "application/json",
-		"Content-Type": "application/x-www-form-urlencoded"
-	};
-	console.log(user_info);  
-	const searchParams = new URLSearchParams(user_info);
 
-	console.log(searchParams);  
-  	return fetch("http://localhost:8080/check-login", {
-  		method: "POST",
-  		headers: header,
-  		body: searchParams
+	constructor(props) {
+	  	super(props);
+	  	this.state = {email: "Enter your email address", password: "Enter your password"};
+	}
 
-  	}).then(function(resp) {
-  		console.log("returning json");
-  		return resp.json();
-  	});
-  }
+	async handleEmailUpdate(evt){
+	  	this.setState({email: evt.target.value});
+	} 
 
 
+	async handlePasswordUpdate(evt){
+		this.setState({password: evt.target.value});
+	}
 
-
-constructor(props) {
-  	super(props);
-  	this.state = {email: "Enter your email address", password: "Enter your password"};
-}
-
-async handleEmailUpdate(evt){
-  	this.setState({email: evt.target.value});
-} 
-
-
-async handlePasswordUpdate(evt){
-	this.setState({password: evt.target.value});
-}
-
-
-
-render() {
-	const that = this;
-	
-	return (
-		<MyLayout current="login">
-
-		<h1>Log in </h1>
-
+	render() {
+		const that = this;
 		
-		Username&nbsp;&nbsp;
-		<input
-		type="text"
-		className="text-style"
-		value={this.state.email}
-		onChange={this.handleEmailUpdate.bind(this)}
-		/>
+		return (
+			<MyLayout current="login">
 
-		<br /><br />
+			<h1>Log in </h1>
 
-		Password&nbsp;&nbsp;
-		<input
-		type="password"
-		className="text-style"
-		value={this.state.password}
-		onChange={this.handlePasswordUpdate.bind(this)}
-		/>
-		
-		<br /><br />
+			
+			Username&nbsp;&nbsp;
+			<input
+			type="text"
+			className="text-style"
+			value={this.state.email}
+			onChange={this.handleEmailUpdate.bind(this)}
+			/>
 
-		<Button onClick={this.handleSearch.bind(that)}>
-		SUBMIT
-		</Button>
+			<br /><br />
 
-	
+			Password&nbsp;&nbsp;
+			<input
+			type="password"
+			className="text-style"
+			value={this.state.password}
+			onChange={this.handlePasswordUpdate.bind(this)}
+			/>
+			
+			<br /><br />
 
-		<style jsx>{`
+			<Button onClick={this.handleSearch.bind(that)}>
+			SUBMIT
+			</Button>
 
+			{('loggedInUser' in this.state ) ?
+				<div>
+				{(this.state.loggedInUser.status == "email incorrect" || this.state.loggedInUser.status == "password incorrect") ?
+					<p><b>Your email or passsword is incorrect. Please try again.</b></p>
+				: null}
+				</div>
+			: null}
 
-
-
-
-
-			`}</style>
+			<style jsx>{``}</style>
 
 			</MyLayout>
-			);
-}
+		);
+	}
 
 }
 

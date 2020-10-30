@@ -2,6 +2,7 @@ import { findjobbyid } from '../../lib/utils.js';
 import Link from 'next/link';
 import MyLayout from '../../components/mylayout.js';
 import Button from 'react-bootstrap/Button';
+import jsCookie from "js-cookie";
 
 
 const Post = props => { 
@@ -17,12 +18,14 @@ const Post = props => {
         <p>Post date: {props.result.start_date}</p>
         <p>Expiration date: {props.result.end_date}</p>
         <p>Job description: {props.result.description}</p>
-
-        <p>
-            <Link href="../deletejob/[props.result.id]" as={`../deletejob/${props.result.id}`} >
-                <Button>DELETE THIS JOB</Button>
-            </Link>
-        </p>
+        
+        { jsCookie.get("admin") ?
+            <p>
+                <Link href="../deletejob/[props.result.id]" as={`../deletejob/${props.result.id}`} >
+                    <Button>DELETE THIS JOB</Button>
+                </Link>
+            </p>
+        : null}
     </div>
   </MyLayout>
 
