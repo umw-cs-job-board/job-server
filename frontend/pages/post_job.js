@@ -19,7 +19,7 @@ class PostJob extends React.Component{
         todayPlus30.setDate(todayPlus30.getDate() + 30);
         var todayDate = (today.getFullYear() + '-' + (today.getMonth()+1) + '-' +  today.getDate());
         var todayPlus30Date = (todayPlus30.getFullYear() + '-' + (todayPlus30.getMonth()+1) + '-' +  todayPlus30.getDate());
-		this.state={title:"", employer_name:(jsCookie.get("name")), location:"", start_date:todayDate, end_date:todayPlus30Date, description:""};
+		this.state={title:"", employer_name:(jsCookie.get("name")), location:"", start_date:todayDate, end_date:todayPlus30Date, description:"", id: jsCookie.get("id")};
 	}
 
 	async updateTitle(evt){
@@ -53,7 +53,8 @@ class PostJob extends React.Component{
 			location: this.state.location,
 			start_date: this.state.start_date,
 			end_date: this.state.end_date,
-			description: this.state.description
+			description: this.state.description,
+			employer_id: this.state.id
 		});
 		console.log("create job: " + create);
 		this.setState({create});

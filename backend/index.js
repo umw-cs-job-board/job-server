@@ -34,7 +34,8 @@ app.get("/", async (req, res) => {
 				location: item.location,
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
-				description: item.description
+				description: item.description,
+				employer_id: item.employer_id
 			}
 		});
 		const ret = {rows: joblist}
@@ -70,7 +71,8 @@ app.get("/search", async(req, res) =>{
 				location: item.location,
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
-				description: item.description
+				description: item.description,
+				employer_id: item.employer_id
 			}
 		});
 		const ret = {rows: joblist}
@@ -84,7 +86,7 @@ app.get("/find-job-by-id", async (req, res) => {
 	const id = req.query.id;
 	console.log(id);
 	try {
-		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs WHERE id = $1 ORDER BY start_date ASC";
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description, employer_id FROM jobs WHERE id = $1 ORDER BY start_date ASC";
 		const response = await pool.query(template, [id]);
 
 		console.log(response);
@@ -97,7 +99,9 @@ app.get("/find-job-by-id", async (req, res) => {
 				location: item.location,
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
-				description: item.description
+				description: item.description,
+				employer_id: item.employer_id
+
 			}
 		});
 		const ret = {rows: joblist}
@@ -168,6 +172,7 @@ app.post("/create-job", async (req, res) => {
 		const start_date_to_add = req.body.start_date;
 		const end_date_to_add = req.body.end_date;
 		const description_to_add = req.body.description;
+		const employer_id_to_add = req.body.employer_id;
 
 		//if parameter is missing while trying to add, return error
 		if (title_to_add == null || employer_name_to_add == null || location_to_add == null || start_date_to_add == null || end_date_to_add == null || description_to_add == null) {
@@ -179,14 +184,15 @@ app.post("/create-job", async (req, res) => {
 			
 			console.log("job about to be added");
 
-			const template2 = "INSERT INTO jobs (title, employer_name, location, start_date, end_date, description) VALUES ($1, $2, $3, TO_DATE($4, 'YYYY-MM-DD'), TO_DATE($5, 'YYYY-MM-DD'), $6)";
+			const template2 = "INSERT INTO jobs (title, employer_name, location, start_date, end_date, description, employer_id) VALUES ($1, $2, $3, TO_DATE($4, 'YYYY-MM-DD'), TO_DATE($5, 'YYYY-MM-DD'), $6, $7)";
 			const response2 = await pool.query(template2, [
 				title_to_add,
 				employer_name_to_add,
 				location_to_add,
 				start_date_to_add,
 				end_date_to_add,
-				description_to_add
+				description_to_add,
+				employer_id_to_add
 				]);
 			console.log("job added");
 			res.json({ "status" : "job added" });
@@ -254,6 +260,7 @@ app.post("/check-login", async (req, res) =>
 				}
 				else {
 					res.json({ status: "success",
+							id: result.rows[0].id,
 							email: result.rows[0].email,
 							password: result.rows[0].password,
 							name: result.rows[0].name,

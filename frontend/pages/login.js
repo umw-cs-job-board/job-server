@@ -28,7 +28,8 @@ class Login extends React.Component {
 			jsCookie.set("password", loggedInUser.password);
 			jsCookie.set("location", loggedInUser.location);
 			jsCookie.set("industry", loggedInUser.industry);
-			jsCookie.set("description", loggedInUser.industry);
+			jsCookie.set("description", loggedInUser.description);
+			jsCookie.set("id", loggedInUser.id);
 			jsCookie.set(loggedInUser.user_type, "true");
 			console.log("Cookies are set.")
 			Router.push("/");

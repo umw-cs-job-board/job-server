@@ -19,7 +19,7 @@ const Post = props => {
         <p>Expiration date: {props.result.end_date}</p>
         <p>Job description: {props.result.description}</p>
         
-        { jsCookie.get("admin") || (jsCookie.get("name") == props.result.employer_name)?
+        { jsCookie.get("admin") || (jsCookie.get("employer") && jsCookie.get("id") == props.result.employer_id) ?
             <p>
                 <Link href="../deletejob/[props.result.id]" as={`../deletejob/${props.result.id}`} >
                     <Button>DELETE THIS JOB</Button>
