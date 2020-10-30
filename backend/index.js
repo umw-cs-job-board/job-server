@@ -215,7 +215,7 @@ app.post("/api/create-job", async (req, res) => {
 
 //checks email and password, returns status, user's info and whether they are admin or employer
 
-app.post("/check-login", async (req, res) => 
+app.post("/api/check-login", async (req, res) => 
 {
 	const employer_email = req.body.email;
 	const employer_password = req.body.password;

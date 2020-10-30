@@ -50,7 +50,7 @@ class Login extends React.Component {
 		const searchParams = new URLSearchParams(user_info);
 
 		console.log(searchParams);  
-	  	return fetch("http://localhost:8080/check-login", {
+	  	return fetch("http://34.123.48.219:8080/api/check-login", {
 	  		method: "POST",
 	  		headers: header,
 	  		body: searchParams
