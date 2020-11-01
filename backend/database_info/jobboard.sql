@@ -49,7 +49,7 @@ CREATE TABLE reviews
 	description VARCHAR(100) NOT NULL, 
 	posted_date DATE NOT NULL,
 	affiliation VARCHAR(100) NOT NULL,
-	rating INTEGER NOT NULL,
+	rating INTEGER NOT NULL
 );
 GRANT SELECT, INSERT, DELETE ON reviews TO jbuser;
 GRANT USAGE ON reviews_id_seq TO jbuser;
