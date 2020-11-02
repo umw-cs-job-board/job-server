@@ -115,6 +115,49 @@ app.get("/find-job-by-id", async (req, res) => {
 
 
 
+//removing a review by ID - Each review will have an independant ID
+app.delete("/remove-review-by-id", async (req, res) => {
+	const id = req.body.id;
+	console.log("running remove review api");
+	
+	try {
+		//Creating a query to check if the job to be removed exists in the job database.
+		console.log("req.body ");
+		console.log(req.body);
+		
+
+		console.log("id ");
+		console.log(id);
+		//statement to 
+		//const template1 = "SELECT title FROM jobs WHERE id = $1";
+		const response1 = await pool.query(template1, [id]);
+		
+		console.log("response1 ");
+		console.log(response1);
+		
+
+		//If no job is found in the job database matching the id, then error.
+		if (response1.rowCount == 0) {
+			console.log("job not found");
+			res.json({ status: "error: not found"});
+		} 
+		//If the job does exist in the job database, then delete it.
+		else {
+			//res.json({ status: "ok", results: response1.rows[0] });
+			//console.log(err);
+			const template2 = "DELETE FROM jobs WHERE id = $1";
+			const response1 = await pool.query(template2, [id]);
+			console.log("deleting job");
+			res.json({status: "listing deleted"});
+		}
+	} catch (err) {
+		res.json({status: "error: listing not deleted"});
+		console.log(err);
+	}
+});
+
+
+
 
 
 //Remove Job
