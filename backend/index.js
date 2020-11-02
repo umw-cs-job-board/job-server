@@ -121,37 +121,25 @@ app.delete("/remove-review-by-id", async (req, res) => {
 	console.log("running remove review api");
 	
 	try {
-		//Creating a query to check if the job to be removed exists in the job database.
-		console.log("req.body ");
-		console.log(req.body);
-		
-
-		console.log("id ");
-		console.log(id);
-		//statement to 
-		//const template1 = "SELECT title FROM jobs WHERE id = $1";
+		//statement to see if the job ID is in the table
+		//const template1 = "SELECT title FROM reviews WHERE id = $1";
 		const response1 = await pool.query(template1, [id]);
-		
-		console.log("response1 ");
-		console.log(response1);
-		
 
 		//If no job is found in the job database matching the id, then error.
 		if (response1.rowCount == 0) {
-			console.log("job not found");
+			console.log("review not found");
 			res.json({ status: "error: not found"});
 		} 
-		//If the job does exist in the job database, then delete it.
+		//If the review does exist in the review database, then delete it.
 		else {
-			//res.json({ status: "ok", results: response1.rows[0] });
-			//console.log(err);
-			const template2 = "DELETE FROM jobs WHERE id = $1";
+			//SQL Statement to remove a review
+			//const template2 = "DELETE FROM reviews WHERE id = $1";
 			const response1 = await pool.query(template2, [id]);
-			console.log("deleting job");
-			res.json({status: "listing deleted"});
+			console.log("deleting review");
+			res.json({status: "review deleted"});
 		}
 	} catch (err) {
-		res.json({status: "error: listing not deleted"});
+		res.json({status: "error: review not deleted"});
 		console.log(err);
 	}
 });
