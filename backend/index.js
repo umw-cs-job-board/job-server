@@ -208,7 +208,55 @@ app.post("/create-job", async (req, res) => {
 
 
 
+//create job and add it to the database
+app.post("/create-review", async (req, res) => {
 
+	console.log("----------");
+
+	try {
+		
+		console.log(req.body);
+		//title, employer_name, location, start_date , end_date, description
+		const employer_id_to_add = req.body.employer_id;
+		const reviewer_to_add = req.body.reviewer;
+		const title_to_add = req.body.title;
+		const rating_to_add = req.body.rating;
+		const description_to_add = req.body.description;
+		const posted_date_to_add = req.body.posted_date;
+		const affiliation_to_add = req.body.affiliation;
+
+		//if parameter is missing while trying to add, return error
+		if (employer_id_to_add == null || reviewer_to_add == null || title_to_add == null || rating_to_add == null || description_to_add == null || posted_date_to_add == null || affiliation_to_add == null) {
+			console.error("info missing");
+			console.log("employer_id_to_add, " + employer_id_to_add);
+			res.json({ error : "info missing"});			
+		}
+
+		else {
+			
+			console.log("review about to be added");
+
+			const template2 = "INSERT INTO reviews (emp_id, reviewer, title, rating, description, posted_date, affiliation) VALUES ($1, $2, $3, $4, $5, TO_DATE($6, 'YYYY-MM-DD'), $7)";
+			const response2 = await pool.query(template2, [
+				employer_id_to_add,
+				reviewer_to_add,
+				title_to_add,
+				rating_to_add,
+				description_to_add,
+				posted_date_to_add,
+				affiliation_to_add
+				]);
+			console.log("review added");
+			res.json({ "status" : "review added" });
+			
+		}
+	} catch (err) {
+		res.sendStatus(400);
+
+		console.log(err);
+	}
+
+});
 
 
 
