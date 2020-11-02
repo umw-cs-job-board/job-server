@@ -43,13 +43,15 @@ INSERT INTO employers(name, email, password, location, industry, description) VA
 
 CREATE TABLE reviews
 (
-	review_id SERIAL REFERENCES employers (id) PRIMARY KEY, 
+	id SERIAL PRIMARY KEY,
+	emp_id INTEGER,
 	reviewer VARCHAR(100) NOT NULL, 
 	title VARCHAR(100) NOT NULL, 
 	description VARCHAR(100) NOT NULL, 
 	posted_date DATE NOT NULL,
 	affiliation VARCHAR(100) NOT NULL,
-	rating INTEGER NOT NULL
+	rating INTEGER NOT NULL,
+	CONSTRAINT emp_id_fk FOREIGN KEY(emp_id) REFERENCES employers(id)
 );
 GRANT SELECT, INSERT, DELETE ON reviews TO jbuser;
 GRANT USAGE ON reviews_id_seq TO jbuser;
