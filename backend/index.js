@@ -206,6 +206,27 @@ app.post("/create-job", async (req, res) => {
 
 });
 
+//get all employers
+app.get("/get-employer", async (req, res) => {
+	try {
+		const template = "SELECT id, name, location, industry, description FROM employers ORDER BY name ASC";
+		const response = await pool.query(template);
+		const employerlist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				name: item.name,
+				location: item.location,
+				industry: item.industry,
+				description: item.description
+			}
+		});
+		const ret = {rows: employerlist}
+		res.json(ret);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
 
 app.get("/find-employer-by-id", async (req, res) => {
 	const id = req.query.id;
@@ -235,6 +256,45 @@ app.get("/find-employer-by-id", async (req, res) => {
 		}
 });
 
+//Remove employer
+app.delete("/remove-employer", async (req, res) => {
+	const id = req.body.id;
+	console.log("running remove employer api");
+	
+	try {
+		//Creating a query to check if the job to be removed exists in the job database.
+		console.log("req.body ");
+		console.log(req.body);
+		
+
+		console.log("id ");
+		console.log(id);
+		const template1 = "SELECT name FROM employers WHERE id = $1";
+		const response1 = await pool.query(template1, [id]);
+		
+		console.log("response1 ");
+		console.log(response1);
+		
+
+		//If no employer is found in the employer database matching the id, then error.
+		if (response1.rowCount == 0) {
+			console.log("employer not found");
+			res.json({ status: "error: not found"});
+		} 
+		//If the employer does exist in the job database, then delete it.
+		else {
+			//res.json({ status: "ok", results: response1.rows[0] });
+			//console.log(err);
+			const template2 = "DELETE FROM employers WHERE id = $1";
+			const response1 = await pool.query(template2, [id]);
+			console.log("deleting employer");
+			res.json({status: "employer deleted"});
+		}
+	} catch (err) {
+		res.json({status: "error: listing not deleted"});
+		console.log(err);
+	}
+});
 
 app.get("/find-review-by-id", async (req, res) => {
 	const id = req.query.id;
