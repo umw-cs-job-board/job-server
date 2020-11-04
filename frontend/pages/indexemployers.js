@@ -1,6 +1,6 @@
 import React from "react";
 import {getemployers} from '../lib/utils.js'
-import {search} from '../lib/utils.js'
+import {searchEmployers} from '../lib/utils.js'
 import {removeEmployer} from '../lib/utils.js'
 import Link from 'next/link';
 
@@ -30,7 +30,7 @@ class Home extends React.Component {
 
   async handleSearch(evt){
     this.setState({search: evt.target.value});
-    const employers = await search(evt.target.value);
+    const employers = await searchEmployers(evt.target.value);
     this.setState({employers});
   }
 
@@ -44,11 +44,24 @@ class Home extends React.Component {
     return (
       <MyLayout current="home">
         
-        <div>
-              <br />
+
+
+		<span className="bglightblueshaded boxsmall">
+			<b>&nbsp;&nbsp;<a href="/">SEARCH JOBS / INTERNSHIPS</a>&nbsp;&nbsp;</b>
+		</span>&nbsp;&nbsp;
+		<span href="#" className="bglightblue boxsmall">
+			<b>&nbsp;&nbsp;SEARCH EMPLOYERS&nbsp;&nbsp;</b>
+		</span>
+
+		<div className="bglightblue boxsmall col">
+			<div className="bgwhite box col">
+		        <div>
+
+
+
+
+	        <div>
                
-
-
               <Form> 
 
                 <InputGroup className="mb-2 mr-sm-2">
@@ -100,15 +113,18 @@ class Home extends React.Component {
 
 
               </div> : null}
-          <div>
-              <style jsx>{`
+	          <div>
+	              <style jsx>{`
                   
 
 
-              `}</style>
+	              `}</style>
               </div>
               </div>
-                    </MyLayout>
+          </div>
+          </div>
+        </div>
+    </MyLayout>
 
     );
   }

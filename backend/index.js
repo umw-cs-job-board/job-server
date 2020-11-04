@@ -255,6 +255,46 @@ app.get("/find-employer-by-id", async (req, res) => {
 		}
 });
 
+
+
+
+
+app.get("/search-employers", async(req, res) =>{
+	const query = req.query.q;
+
+	try{
+		let template = "SELECT * FROM employers WHERE name ILIKE $1 ORDER BY name ASC";
+		let response = await pool.query(template, [`%${query}%`]);
+		if(response.rowCount == 0){
+			template = "SELECT * FROM employers WHERE industry ILIKE $1 ORDER BY name ASC";
+			response = await pool.query(template, [`%${query}%`]);
+			if(response.rowCount == 0){
+				template = "SELECT * FROM employers WHERE location ILIKE $1 ORDER BY name ASC";
+				response = await pool.query(template, [`%${query}%`]);
+				if(response.rowCount == 0){
+					template = "SELECT * FROM employers WHERE description ILIKE $1 ORDER BY name ASC";
+					response = await pool.query(template, [`%${query}%`]);
+				}
+			}
+		}
+		const employerlist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				name: item.name,
+				industry: item.industry,
+				location: item.location,
+				description: item.description
+			}
+		});
+		const ret = {rows: employerlist}
+		res.json(ret);
+	}catch(err){
+		console.error(err);
+	}
+});
+
+
+
 //Remove employer
 app.delete("/remove-employer", async (req, res) => {
 	const id = req.body.id;
