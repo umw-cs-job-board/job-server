@@ -44,8 +44,19 @@ class Home extends React.Component {
     return (
       <MyLayout current="home">
         
-        <div>
-              <br />
+
+		
+		<span className="bglightblue boxsmall">
+			<b>&nbsp;&nbsp;SEARCH JOBS / INTERNSHIPS&nbsp;&nbsp;</b>
+		</span>&nbsp;&nbsp;
+		<span href="#" className="bglightblueshaded boxsmall">
+			<b>&nbsp;&nbsp;<a href="/indexemployers">SEARCH EMPLOYERS</a>&nbsp;&nbsp;</b>
+		</span>
+
+		<div className="bglightblue boxsmall col">
+			<div className="bgwhite box col">
+		        <div>
+
                
 
 
@@ -102,15 +113,25 @@ class Home extends React.Component {
 
 
               </div> : null}
+
+
           <div>
               <style jsx>{`
                   
 
 
               `}</style>
-              </div>
-              </div>
-                    </MyLayout>
+          </div>
+      </div>
+
+
+
+	</div>
+	</div>
+
+
+
+    </MyLayout>
 
     );
   }

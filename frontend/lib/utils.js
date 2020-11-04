@@ -113,7 +113,7 @@ async function getEmployer(){
 }
 
 async function searchEmployers(query){
-	return await fetch(`http://localhost:8080/search?q=${query}`).then(function(resp){
+	return await fetch(`http://localhost:8080/search-employers?q=${query}`).then(function(resp){
 		return resp.json();
 	});
 }
@@ -160,7 +160,7 @@ module.exports = {
 	getemployers: function(){
 		return getEmployer().catch(handleError);
 	},
-	search: function(query){
+	searchEmployers: function(query){
 		return searchEmployers(query).catch(handleError);
 	},
 	removeEmployer: function(info){
