@@ -1,6 +1,11 @@
 require("isomorphic-fetch");
 import BPromise from 'bluebird';
 
+
+
+
+//jobs
+
 async function deleteJob(info){
 
 	console.log("running deleteJob in utils.js");
@@ -53,6 +58,75 @@ async function searchJobs(query){
 	});
 }
 
+
+
+
+
+
+//employers
+
+
+async function deleteEmployer(info){
+
+	console.log("running deleteEmployer in utils.js");
+
+	const header = {
+		'Accept': "application/json",
+		'Content-Type': 'application/x-www-form-urlencoded'
+	};
+
+	const searchParams = new URLSearchParams(info);
+  
+	return await fetch("http://localhost:8080/remove-employer", {
+		method: "DELETE",
+		headers: header,
+		body: searchParams
+	});
+}
+
+async function findemployerbyid(idnum){
+	return await fetch(`http://localhost:8080/find-employer-by-id?id=${idnum}`).then(function(resp){
+		console.log("idnum " + idnum);
+		return resp.json();
+	})
+}
+
+async function postEmployer(info){
+	const header = {
+		'Accept': "application/json",
+		'Content-Type': 'application/x-www-form-urlencoded'
+	};
+
+	const searchParams = new URLSearchParams(info);
+
+	return await fetch("http://localhost:8080/create-employer", {
+		method: "POST",
+		headers: header,
+		body: searchParams
+	});
+}
+
+async function getEmployer(){
+	return await fetch("http://localhost:8080/get-employer").then(function(resp){
+		return resp.json();
+	});
+}
+
+async function searchEmployers(query){
+	return await fetch(`http://localhost:8080/search?q=${query}`).then(function(resp){
+		return resp.json();
+	});
+}
+
+
+
+
+
+
+
+
+
+
 function handleError(error){
 	console.warn(error);
 	return null;
@@ -74,6 +148,29 @@ module.exports = {
 	},
 	removeJob: function(info){
 		return deleteJob(info).catch(handleError);
-	}
+	},
+
+
+	createEmployer: function(info){
+		return postEmployer(info).catch(handleError);
+	},
+	findemployerbyid: function(info){
+		return findemployerbyid(info).catch(handleError);
+	},
+	getemployers: function(){
+		return getEmployer().catch(handleError);
+	},
+	search: function(query){
+		return searchEmployers(query).catch(handleError);
+	},
+	removeEmployer: function(info){
+		return deleteEmployer(info).catch(handleError);
+	},
+
+
+
+
+
+
 }
 
