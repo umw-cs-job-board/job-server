@@ -299,7 +299,7 @@ app.get("/find-review-by-id", async (req, res) => {
 	const id = req.query.id;
 	console.log(id);
 	try {
-		const template = "SELECT id, emp_id, reviewer, title, description, posted_date, affiliation, rating FROM reviews WHERE id = $1";
+		const template = "SELECT id, emp_id, reviewer, title, description, posted_date, affiliation, rating FROM reviews WHERE emp_id = $1";
 		const response = await pool.query(template, [id]);
 
 		console.log(response);

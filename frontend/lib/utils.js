@@ -84,6 +84,28 @@ async function deleteEmployer(info){
 	});
 }
 
+async function post_review(info){
+	const header = {
+		'Accept': "application/json",
+		'Content-Type': 'application/x-www-form-urlencoded'
+	};
+
+	const searchParams = new URLSearchParams(info);
+
+	return await fetch("http://localhost:8080/create-review", {
+		method: "POST",
+		headers: header,
+		body: searchParams
+	});
+}
+
+async function get_reviews_by_emp(idnum){
+	return await fetch(`http://localhost:8080/find-review-by-id?id=${idnum}`).then(function(resp){
+		console.log("idnum " + idnum);
+		return resp.json();
+	})
+}
+
 async function findemployerbyid(idnum){
 	return await fetch(`http://localhost:8080/find-employer-by-id?id=${idnum}`).then(function(resp){
 		console.log("idnum " + idnum);
@@ -166,9 +188,12 @@ module.exports = {
 	removeEmployer: function(info){
 		return deleteEmployer(info).catch(handleError);
 	},
-
-
-
+	get_reviews: function(info){
+		return get_reviews_by_emp(info).catch(handleError);
+	},
+	create_review: function(info){
+		return post_review(info).catch(handleError);
+	}
 
 
 
