@@ -207,6 +207,66 @@ app.post("/create-job", async (req, res) => {
 });
 
 
+app.get("/find-employer-by-id", async (req, res) => {
+	const id = req.query.id;
+	console.log(id);
+	try {
+		const template = "SELECT id, name, location, industry, description FROM employers WHERE id = $1";
+		const response = await pool.query(template, [id]);
+
+		console.log(response);
+
+		const employerslist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				name: item.name,
+				location: item.location,
+				industry: item.industry,
+				description: item.description
+
+			}
+		});
+		const ret = {rows: employerslist}
+
+		res.json(ret);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
+
+
+app.get("/find-review-by-id", async (req, res) => {
+	const id = req.query.id;
+	console.log(id);
+	try {
+		const template = "SELECT id, emp_id, reviewer, title, description, posted_date, affiliation, rating FROM reviews WHERE id = $1";
+		const response = await pool.query(template, [id]);
+
+		console.log(response);
+
+		const reviewlist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				emp_id: item.emp_id,
+				reviewer: item.reviewer,
+				title: item.title,
+				description: item.description,
+				posted_date: dateFormat(item.posted_date, "isoDate"),
+				affiliation: item.affiliation,
+				rating: item.rating
+
+			}
+		});
+		const ret = {rows: reviewlist}
+
+		res.json(ret);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
+
 
 //create job and add it to the database
 app.post("/create-review", async (req, res) => {
