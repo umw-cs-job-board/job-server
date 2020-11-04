@@ -209,7 +209,7 @@ app.post("/create-job", async (req, res) => {
 //get all employers
 app.get("/get-employer", async (req, res) => {
 	try {
-		const template = "SELECT id, name, location, industry, description FROM employers ORDER BY name ASC";
+		const template = "SELECT id, name, location, industry, description FROM employers WHERE name != 'UMW CPSC' ORDER BY name ASC";
 		const response = await pool.query(template);
 		const employerlist = response.rows.map(function(item){
 			return{
@@ -232,9 +232,8 @@ app.get("/find-employer-by-id", async (req, res) => {
 	const id = req.query.id;
 	console.log(id);
 	try {
-		const template = "SELECT id, name, location, industry, description FROM employers WHERE id = $1";
+		const template = "SELECT id, name, location, industry, description FROM employers WHERE id = $1 AND name != 'UMW CPSC'";
 		const response = await pool.query(template, [id]);
-
 		console.log(response);
 
 		const employerslist = response.rows.map(function(item){
