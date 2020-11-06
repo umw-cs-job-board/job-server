@@ -191,7 +191,7 @@ module.exports = {
 	get_reviews: function(info){
 		return get_reviews_by_emp(info).catch(handleError);
 	},
-	create_review: function(info){
+	create_reviews: function(info){
 		return post_review(info).catch(handleError);
 	}
 

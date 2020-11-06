@@ -3,12 +3,37 @@ import { get_reviews } from '../../lib/utils.js';
 import { create_reviews } from '../../lib/utils.js';
 import Link from 'next/link';
 import MyLayout from '../../components/mylayout.js';
-import Button from 'react-bootstrap/Button';
 import jsCookie from "js-cookie";
 import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import React, { useState } from "react";
+
 
 const Post = props => { 
+
+    const [reviewer, setReviewer] = useState("");
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [posted_date, setPosted_date] = useState("");
+    const [affiliation, setAffiliation] = useState("");
+    const [rating, setRating] = useState("");
+    const [review, setReview] = useState("No");
+
+    const handleSubmit = (evt) => {
+      const Review = create_reviews({
+        employer_id: props.result.id,
+        reviewer: reviewer,
+        title: title,
+        description: description,
+        posted_date: posted_date,
+        affiliation: affiliation,
+        rating: rating
+      });
+      setReview("Yes");
+    }
 
     return (
 
@@ -53,6 +78,92 @@ const Post = props => {
                     </tbody>
                   </Table>
                 </div> : null}
+
+    <span className="bglightblue boxsmall">
+            <b>&nbsp;&nbsp;Write a Review&nbsp;&nbsp;</b>
+    </span>&nbsp;&nbsp;
+
+    <div className="bglightblue boxsmall col">
+            <div className="bgwhite box col">
+                <div>
+
+               
+
+
+              <Form> 
+                
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formReviewReviewer">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control type="text" value={reviewer} onChange={e => setReviewer(e.target.value)} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formReviewTitle">
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control type="text" value={title} onChange={e => setTitle(e.target.value)} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formReviewRating">
+                        <Form.Label>Rating</Form.Label>
+                        <Form.Control type="text" value={rating} onChange={e => setRating(e.target.value)} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formReviewAffiliation">
+                        <Form.Label>Job Title</Form.Label>
+                        <Form.Control type="text" placeholder = 'e.g. software developer, intern etc.' value={affiliation} onChange={e => setAffiliation(e.target.value)} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formReviewPostedDate">
+                        <Form.Label>Date</Form.Label>
+                        <Form.Control type="text" placeholder='yyyy-mm-dd' value={posted_date} onChange={e => setPosted_date(e.target.value)} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formReviewDescription">
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control as="textarea" rows={3} placeholder = 'Describe your experience at this company' type="text" value={description} onChange={e => setDescription(e.target.value)} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                {(({reviewer}=="") || ({title}=="") || ({description}=="") || ({posted_date}=="") || ({affiliation}=="") || ({rating}==""))  ?
+                    <p>Fill out all fields!<br /></p>
+                :<p><Button onClick={handleSubmit}>Submit</Button><br /></p>}
+                {({review} && ({review} == "Yes"))?
+                    <p>Review successfully submitted!<br /></p>
+                    : null
+                }
+
+                {({review} && ({review} == "No"))?
+                    <p>Review not submitted!<br /></p>
+                    : null
+                }
+
+              </Form>
+              </div>
+            </div>
+    </div>
+
   </MyLayout>
 
 
