@@ -19,7 +19,7 @@ class PostJob extends React.Component{
         todayPlus30.setDate(todayPlus30.getDate() + 30);
         var todayDate = (today.getFullYear() + '-' + (today.getMonth()+1) + '-' +  today.getDate());
         var todayPlus30Date = (todayPlus30.getFullYear() + '-' + (todayPlus30.getMonth()+1) + '-' +  todayPlus30.getDate());
-		this.state={title:"", employer_name:(jsCookie.get("name")), location:"", start_date:todayDate, end_date:todayPlus30Date, description:"", id: jsCookie.get("id")};
+		this.state={title:"", employer_name:(jsCookie.get("name")), location:"", start_date:todayDate, end_date:todayPlus30Date, description:"", contact:"", id: jsCookie.get("id")};
 	}
 
 	async updateTitle(evt){
@@ -46,6 +46,10 @@ class PostJob extends React.Component{
 		this.setState({description: evt.target.value});
 	}
 
+	async updateContact(evt){
+		this.setState({contact: evt.target.value});
+	}
+
 	async submit(evt){
 		const create = await createJob({
 			title: this.state.title,
@@ -54,6 +58,7 @@ class PostJob extends React.Component{
 			start_date: this.state.start_date,
 			end_date: this.state.end_date,
 			description: this.state.description,
+			contact: this.state.contact,
 			employer_id: this.state.id
 		});
 		console.log("create job: " + create);
@@ -88,6 +93,12 @@ class PostJob extends React.Component{
 						<Form.Group controlId="formLocation">
 						<Form.Label>Location</Form.Label>
 						<Form.Control placeholder = 'Fredericksburg, VA...' type="text" value={this.state.location} onChange={this.updateLocation.bind(this)} />
+						</Form.Group>
+					</Col>
+					<Col>
+						<Form.Group controlId="formContact">
+						<Form.Label>Preferred contact</Form.Label>
+						<Form.Control placeholder = 'Website, email, or phonenumber...' type="text" value={this.state.contact} onChange={this.updateContact.bind(this)} />
 						</Form.Group>
 					</Col>
 				</Row>

@@ -17,6 +17,7 @@ const Post = props => {
         <p>Location: {props.result.location}</p>
         <p>Post date: {props.result.start_date}</p>
         <p>Expiration date: {props.result.end_date}</p>
+        <p>Preferred Contact: {props.result.contact}</p>
         <p>Job description: {props.result.description}</p>
         
         { jsCookie.get("admin") || (jsCookie.get("employer") && jsCookie.get("id") == props.result.employer_id) ?

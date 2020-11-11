@@ -37,7 +37,7 @@ const Post = props => {
 
     return (
 
-      <MyLayout>
+    <MyLayout>
 
     <div>
         <h1>{props.result.name}</h1>
@@ -54,43 +54,38 @@ const Post = props => {
         : null}
     </div>
 
-    {props.reviews ? <div>
+    {props.reviews ? 
+        <div>
+        <br />
 
-                  <br />
-
-                  <Table>
-                    <thead>
-                      <tr>
-                        <th>EMPLOYER REVIEWS</th>
-                      </tr>
-                      </thead>
-                    <tbody>
-                      {props.reviews.rows.map((item, key) =>
-                        <tr key={item.id}>
-                            <td>
-                                <tr><b>{item.title} ({item.rating} stars)</b></tr>
-                                <tr>{item.reviewer} ({item.affiliation})</tr>
-                                <tr>{item.posted_date}: {item.description}</tr>
-                            </td>
-                        </tr>
-                        )}
-                      
-                    </tbody>
-                  </Table>
-                </div> : null}
+            <Table>
+                <thead>
+                    <tr>
+                    <th>EMPLOYER REVIEWS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {props.reviews.rows.map((item, key) =>
+                    <tr key={item.id}>
+                        <td>
+                            <tr><b>{item.title} ({item.rating} stars)</b></tr>
+                            <tr>{item.reviewer} ({item.affiliation})</tr>
+                            <tr>{item.posted_date}: {item.description}</tr>
+                        </td>
+                    </tr>
+                    )}
+                </tbody>
+            </Table>
+        </div> : null}
 
     <span className="bglightblue boxsmall">
-            <b>&nbsp;&nbsp;Write a Review&nbsp;&nbsp;</b>
+        <b>&nbsp;&nbsp;Write a Review&nbsp;&nbsp;</b>
     </span>&nbsp;&nbsp;
 
     <div className="bglightblue boxsmall col">
-            <div className="bgwhite box col">
-                <div>
-
-               
-
-
-              <Form> 
+        <div className="bgwhite box col">
+            <div>
+                <Form> 
                 
                 <Row>
                     <Col>
@@ -149,6 +144,7 @@ const Post = props => {
                 {(({reviewer}=="") || ({title}=="") || ({description}=="") || ({posted_date}=="") || ({affiliation}=="") || ({rating}==""))  ?
                     <p>Fill out all fields!<br /></p>
                 :<p><Button onClick={handleSubmit}>Submit</Button><br /></p>}
+                
                 {({review} && ({review} == "Yes"))?
                     <p>Review successfully submitted!<br /></p>
                     : null
@@ -159,17 +155,14 @@ const Post = props => {
                     : null
                 }
 
-              </Form>
-              </div>
+                </Form>
             </div>
+        </div>
     </div>
 
-  </MyLayout>
+    </MyLayout>
 
-
-    )
-
-}
+)}
 
 //this is used to preload the search to find the employer so it doesn't have problems trying to read an unfullfilled promise
 Post.getInitialProps = async ({ query }) => {

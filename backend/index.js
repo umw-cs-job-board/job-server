@@ -24,7 +24,7 @@ var dateFormat = require('dateformat');
 
 app.get("/", async (req, res) => {
 	try {
-		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs ORDER BY start_date ASC";
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description, contact FROM jobs ORDER BY start_date ASC";
 		const response = await pool.query(template);
 		const joblist = response.rows.map(function(item){
 			return{
@@ -35,6 +35,7 @@ app.get("/", async (req, res) => {
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
 				description: item.description,
+				contact: item.contact,
 				employer_id: item.employer_id
 			}
 		});
@@ -72,6 +73,7 @@ app.get("/search", async(req, res) =>{
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
 				description: item.description,
+				contact: item.contact,
 				employer_id: item.employer_id
 			}
 		});
@@ -86,7 +88,7 @@ app.get("/find-job-by-id", async (req, res) => {
 	const id = req.query.id;
 	console.log(id);
 	try {
-		const template = "SELECT id, title, employer_name, location, start_date, end_date, description, employer_id FROM jobs WHERE id = $1 ORDER BY start_date ASC";
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description, contact, employer_id FROM jobs WHERE id = $1 ORDER BY start_date ASC";
 		const response = await pool.query(template, [id]);
 
 		console.log(response);
@@ -100,6 +102,7 @@ app.get("/find-job-by-id", async (req, res) => {
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
 				description: item.description,
+				contact: item.contact,
 				employer_id: item.employer_id
 
 			}
@@ -172,10 +175,11 @@ app.post("/create-job", async (req, res) => {
 		const start_date_to_add = req.body.start_date;
 		const end_date_to_add = req.body.end_date;
 		const description_to_add = req.body.description;
+		const contact_to_add = req.body.contact;
 		const employer_id_to_add = req.body.employer_id;
 
 		//if parameter is missing while trying to add, return error
-		if (title_to_add == null || employer_name_to_add == null || location_to_add == null || start_date_to_add == null || end_date_to_add == null || description_to_add == null) {
+		if (title_to_add == null || employer_name_to_add == null || location_to_add == null || start_date_to_add == null || end_date_to_add == null || description_to_add == null || contact_to_add == null) {
 			console.error("info missing")
 			res.json({ error : "info missing"});			
 		}
@@ -184,7 +188,7 @@ app.post("/create-job", async (req, res) => {
 			
 			console.log("job about to be added");
 
-			const template2 = "INSERT INTO jobs (title, employer_name, location, start_date, end_date, description, employer_id) VALUES ($1, $2, $3, TO_DATE($4, 'YYYY-MM-DD'), TO_DATE($5, 'YYYY-MM-DD'), $6, $7)";
+			const template2 = "INSERT INTO jobs (title, employer_name, location, start_date, end_date, description, contact, employer_id) VALUES ($1, $2, $3, TO_DATE($4, 'YYYY-MM-DD'), TO_DATE($5, 'YYYY-MM-DD'), $6, $7, $8)";
 			const response2 = await pool.query(template2, [
 				title_to_add,
 				employer_name_to_add,
@@ -192,6 +196,7 @@ app.post("/create-job", async (req, res) => {
 				start_date_to_add,
 				end_date_to_add,
 				description_to_add,
+				contact_to_add,
 				employer_id_to_add
 				]);
 			console.log("job added");
@@ -320,10 +325,14 @@ app.delete("/remove-employer", async (req, res) => {
 			console.log("employer not found");
 			res.json({ status: "error: not found"});
 		} 
-		//If the employer does exist in the job database, then delete it.
+		//If the employer does exist in the job database, then delete it and all its reviews
 		else {
-			//res.json({ status: "ok", results: response1.rows[0] });
-			//console.log(err);
+			const removereviews = "DELETE FROM reviews WHERE emp_id = $1";
+			const result = await pool.query(removereviews, [id]);
+			console.log("deleting reviews");
+			const removejobs = "DELETE FROM jobs WHERE employer_id = $1";
+			const res2 = await pool.query(removejobs, [id]);
+			console.log("deleting jobs");
 			const template2 = "DELETE FROM employers WHERE id = $1";
 			const response1 = await pool.query(template2, [id]);
 			console.log("deleting employer");
@@ -456,6 +465,7 @@ app.post("/check-login", async (req, res) =>
 				//check to see if the login is by an admin
 				if (result.rows[0].email == "cpscinternshipproject@gmail.com") {
 					res.json({ status: "success",
+							id: 0,
 							email: result.rows[0].email,
 							password: result.rows[0].password,
 							name: result.rows[0].name,
