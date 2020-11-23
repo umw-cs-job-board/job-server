@@ -21,6 +21,7 @@ const Post = props => {
     const [affiliation, setAffiliation] = useState("");
     const [rating, setRating] = useState("");
     const [review, setReview] = useState("No");
+    const [review_id, set_id] = useState("0");
 
     const handleSubmit = (evt) => {
       const Review = create_reviews({
@@ -35,6 +36,9 @@ const Post = props => {
       setReview("Yes");
     }
 
+    const deleteReview = (evt) => {
+
+    }
     return (
 
     <MyLayout>
@@ -71,13 +75,18 @@ const Post = props => {
                             <tr><b>{item.title} ({item.rating} stars)</b></tr>
                             <tr>{item.reviewer} ({item.affiliation})</tr>
                             <tr>{item.posted_date}: {item.description}</tr>
+                            {jsCookie.get("admin") ?
+                                <a class="badge badge-dark" value={item.id} onClick={e => set_id(e.target.value)}>DELETE REVIEW</a>
+                            : null}
                         </td>
+
                     </tr>
                     )}
                 </tbody>
             </Table>
         </div> : null}
-
+    
+    <br/>
     <span className="bglightblue boxsmall">
         <b>&nbsp;&nbsp;Write a Review&nbsp;&nbsp;</b>
     </span>&nbsp;&nbsp;
