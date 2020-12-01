@@ -55,7 +55,7 @@ class CreateEmployer extends React.Component {
 		const searchParams = new URLSearchParams(user_info);
 
 		console.log(searchParams);  
-	  	return fetch("http://localhost:8080/check-login", {////////////////////////////////////////need name of new api function
+	  	return fetch("http://localhost:8080/create-employer", {
 	  		method: "POST",
 	  		headers: header,
 	  		body: searchParams

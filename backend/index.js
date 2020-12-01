@@ -427,7 +427,76 @@ app.post("/create-review", async (req, res) => {
 });
 
 
+//Create Employer Acct
+app.post("/create-employer", async (req, res) => {
 
+	console.log("----------");
+
+	try {
+		
+		console.log(req.body);
+		//email, password, name, industry, location, description
+		const email_check = req.body.email;
+		const password_check = req.body.password;
+		const name_check = req.body.name;
+		const location_check = req.body.location;
+		const industry_check = req.body.industry;
+		const description_check = req.body.description;
+
+		//if parameter is missing while trying to add, return error
+		if (email_check == null || password_check == null || name_check == null || location_check == null || industry_check == null || description_check == null) {
+			console.error("info missing")
+			res.json({ status : "error"});			
+		}
+
+		else {
+			
+			console.log("employer credentials being checked");
+
+			//check if email exists
+			const template = "SELECT * FROM employers WHERE email = $1";
+			const response = await pool.query(template, [email_check]);
+
+			if(response.rowCount >= 1){
+				console.error("email already exists");
+				res.json({ status : "email already exists" });
+			} 
+
+			else{
+				//check if name exists			
+				const template2 = "SELECT * FROM employers WHERE name = $1";
+				const response2 = await pool.query(template2, [name_check]);
+
+				if(response2.rowCount >= 1){
+					console.error("name already exists");
+					res.json({ status : "name already exists" });
+				}
+
+				else{
+					//try to add employer
+					console.log("employer cabout to be added");
+					const template3 = "INSERT INTO employers (name, email, password, location, industry, description) VALUES ($1, $2, $3, $4, $5, $6)";
+					const response3 = await pool.query(template3, [
+						name_check,
+						email_check,
+						password_check,
+						location_check,
+						industry_check,
+						description_check
+						]);
+					console.log("employer added");
+					res.json({ status : "success" });
+				}
+			}
+		}
+	} catch (err) {
+		res.sendStatus(400);
+
+		console.log(err);
+		res.json({status: "error"});
+	}
+
+});
 
 //checks email and password, returns status, user's info and whether they are admin or employer
 
