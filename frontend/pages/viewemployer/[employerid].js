@@ -1,6 +1,7 @@
 import { findemployerbyid } from '../../lib/utils.js';
 import { get_reviews } from '../../lib/utils.js';
 import { create_reviews } from '../../lib/utils.js';
+import { flag_review } from '../../lib/utils.js';
 import Link from 'next/link';
 import MyLayout from '../../components/mylayout.js';
 import jsCookie from "js-cookie";
@@ -9,6 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Alert from 'react-bootstrap/Alert';
 import React, { useState } from "react";
 
 
@@ -22,6 +24,7 @@ const Post = props => {
     const [rating, setRating] = useState("");
     const [review, setReview] = useState("No");
     const [review_id, set_id] = useState("0");
+    const [show, setShow] = useState(false);
 
     const handleSubmit = (evt) => {
       const Review = create_reviews({
@@ -34,6 +37,15 @@ const Post = props => {
         rating: rating
       });
       setReview("Yes");
+      window.location.reload(true);
+    }
+
+    const flagReview = (evt) => {
+        console.log("flagReview, evt: " + evt);
+        const Flag = flag_review({
+            id: evt
+        });
+        setShow(true);
     }
 
     const deleteReview = (evt) => {
@@ -44,6 +56,18 @@ const Post = props => {
     <MyLayout>
 
     <div>
+
+        {show==true ?
+            <Alert variant="danger" onClose={() => setShow(false)}>
+                <Alert.Heading>The review has been flagged</Alert.Heading>
+                <p>The review will be sent to an administrator for evaluation</p>
+                <div className="d-flex justify-content-end">
+                  <Button onClick={() => setShow(false)} variant="outline-danger">Close</Button>
+                </div>
+            </Alert> 
+          : null
+        }
+
         <h1>{props.result.name}</h1>
         <p>Industry: {props.result.industry}</p>
         <p>Location: {props.result.location}</p>
@@ -77,7 +101,8 @@ const Post = props => {
                             <tr>{item.posted_date}: {item.description}</tr>
                             {jsCookie.get("admin") ?
                                 <a class="badge badge-dark" value={item.id} onClick={e => set_id(e.target.value)}>DELETE REVIEW</a>
-                            : null}
+                            : <p><Button variant="dark" value={item.id} onClick={e => flagReview(e.target.value)}>FLAG REVIEW</Button><br /></p>
+                            }
                         </td>
 
                     </tr>
@@ -154,7 +179,7 @@ const Post = props => {
                     <p>Fill out all fields!<br /></p>
                 :<p><Button onClick={handleSubmit}>Submit</Button><br /></p>}
                 
-                {({review} && ({review} == "Yes"))?
+                {({review} == "Yes")?
                     <p>Review successfully submitted!<br /></p>
                     : null
                 }

@@ -140,6 +140,20 @@ async function searchEmployers(query){
 	});
 }
 
+async function flag_reviews(info){
+	const header = {
+		'Accept': "application/json",
+		'Content-Type': 'application/x-www-form-urlencoded'
+	};
+
+	const searchParams = new URLSearchParams(info);
+
+	return await fetch("http://localhost:8080/flag-review", {
+		method: "POST",
+		headers: header,
+		body: searchParams
+	});
+}
 
 
 
@@ -193,8 +207,10 @@ module.exports = {
 	},
 	create_reviews: function(info){
 		return post_review(info).catch(handleError);
+	},
+	flag_review: function(info){
+		return flag_reviews(info).catch(handleError);
 	}
-
 
 
 }
