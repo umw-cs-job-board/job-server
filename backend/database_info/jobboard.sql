@@ -48,7 +48,9 @@ CREATE TABLE reviews
 	posted_date DATE NOT NULL,
 	affiliation VARCHAR(100) NOT NULL,
 	rating INTEGER NOT NULL,
+	flagged BOOLEAN NOT NULL,
 	CONSTRAINT emp_id_fk FOREIGN KEY(emp_id) REFERENCES employers(id)
 );
-GRANT SELECT, INSERT, DELETE ON reviews TO jbuser;
+ALTER TABLE reviews ALTER COLUMN flagged SET DEFAULT false;
+GRANT SELECT, INSERT, UPDATE, DELETE ON reviews TO jbuser;
 GRANT USAGE ON reviews_id_seq TO jbuser;

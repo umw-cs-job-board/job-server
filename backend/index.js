@@ -117,7 +117,42 @@ app.get("/find-job-by-id", async (req, res) => {
 });
 
 
+//add flag to review and add it to the database
+app.post("/flag-review", async (req, res) => {
 
+	console.log("----------");
+
+	try {
+		
+		console.log(req.body);
+
+		const review_id = req.body.id;
+
+
+		//if parameter is missing while trying to add, return error
+		if (review_id == null) {
+			console.error("info missing");
+			console.log("review_id, " + review_id);
+			res.json({ error : "info missing"});			
+		}
+
+		else {
+			
+			console.log("review about to be updated as flagged");
+
+			const template = "UPDATE reviews SET flagged = true WHERE id = $1";
+			const response = await pool.query(template, [review_id]);
+			console.log("review updated as flagged");
+			res.json({ "status" : "review updated as flagged" });
+			
+		}
+	} catch (err) {
+		res.sendStatus(400);
+
+		console.log(err);
+	}
+
+});
 
 
 //Remove Job
@@ -376,7 +411,7 @@ app.get("/find-review-by-id", async (req, res) => {
 });
 
 
-//create job and add it to the database
+//create review and add it to the database
 app.post("/create-review", async (req, res) => {
 
 	console.log("----------");
