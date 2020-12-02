@@ -103,7 +103,7 @@ class CreateEmployer extends React.Component {
 
 		this.setState({password: evt.target.value}, ()=> {
 
-			/* Regex parts explanantion
+			/* Regex parts explanation
 			^ Start anchor
 			(?=.*[A-Z]){1,} Ensure string has one uppercase letter.
 			(?=.*[!@#$&*]){1,} Ensure string has one special case letter.
