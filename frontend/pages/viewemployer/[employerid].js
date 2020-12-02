@@ -127,11 +127,17 @@ const Post = props => {
                             <tr>{item.reviewer} ({item.affiliation})</tr>
                             <tr>{item.posted_date}: {item.description}</tr>
                             {jsCookie.get("admin") ?
- 
-                               <Link href="../viewemployer/[props.result.id]" as={`../viewemployer/${props.result.id}`} >
-                                 <Button size="sm" variant="dark" value={item.id} onClick={e => {deleteReview({id:item.id}); alert("Review deleted.");}}>DELETE REVIEW</Button>
-                               </Link>
 
+                               <p>
+                                   {item.flagged == true ?
+                                      <Button size="sm" variant="warning" disabled>FLAGGED</Button>
+                                   :null}
+                                   {' '}
+                                   <Link href="../viewemployer/[props.result.id]" as={`../viewemployer/${props.result.id}`} >
+                                     <Button size="sm" variant="dark" value={item.id} onClick={e => {deleteReview({id:item.id}); alert("Review deleted.");}}>DELETE REVIEW</Button>
+                                   </Link>
+
+                               </p>
                             : <p><Button size="sm" variant="dark" value={item.id} onClick={e => flagReview(e.target.value)}>FLAG REVIEW</Button><br /></p>
                             }
                         </td>

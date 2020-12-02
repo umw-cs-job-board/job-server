@@ -383,7 +383,7 @@ app.get("/find-review-by-id", async (req, res) => {
 	const id = req.query.id;
 	console.log(id);
 	try {
-		const template = "SELECT id, emp_id, reviewer, title, description, posted_date, affiliation, rating FROM reviews WHERE emp_id = $1";
+		const template = "SELECT id, emp_id, reviewer, title, description, posted_date, affiliation, flagged, rating FROM reviews WHERE emp_id = $1";
 		const response = await pool.query(template, [id]);
 
 		console.log(response);
@@ -397,7 +397,8 @@ app.get("/find-review-by-id", async (req, res) => {
 				description: item.description,
 				posted_date: dateFormat(item.posted_date, "isoDate"),
 				affiliation: item.affiliation,
-				rating: item.rating
+				rating: item.rating,
+				flagged: item.flagged
 
 			}
 		});
