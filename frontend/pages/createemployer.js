@@ -79,7 +79,8 @@ class CreateEmployer extends React.Component {
 		  	name: "",
 		  	location: "",
 		  	industry: "",
-		  	description: ""
+		  	description: "",
+		  	passwordOK:false
 		};
 
 		jsCookie.remove('name');
@@ -99,7 +100,27 @@ class CreateEmployer extends React.Component {
 	} 
 
 	async handlePasswordUpdate(evt){
-		this.setState({password: evt.target.value});
+
+		this.setState({password: evt.target.value}, ()=> {
+
+			/* Regex parts explanantion
+			^ Start anchor
+			(?=.*[A-Z]){1,} Ensure string has one uppercase letter.
+			(?=.*[!@#$&*]){1,} Ensure string has one special case letter.
+			(?=.*[0-9]){1,} Ensure string has one digit.
+			(?=.*[a-z]){1,} Ensure string has one lowercase letter.
+			.{8,} Ensure string is at least of length 8.
+			$       
+			*/
+
+	        const re = new RegExp("^(?=.*[A-Z]){1,}(?=.*[!@#$&*]){1,}(?=.*[0-9]){1,}(?=.*[a-z]){1,}.{8,}$");
+			//const re = new RegExp("^.{8,}$");
+	        this.setState({passwordOK: re.test(this.state.password)});
+	        
+	        console.log(this.state.password);
+	        console.log(this.state.passwordOK);
+	    });
+
 	}
 
 	async handleNameUpdate(evt){
@@ -204,8 +225,8 @@ class CreateEmployer extends React.Component {
 				</Row>
 
 
-				{((this.state.email=="") || (this.state.password=="") || (this.state.name=="") || (this.state.location=="") || (this.state.industry=="") || (this.state.description==""))  ?
-							<p>Fill out all fields!<br /></p>
+				{((this.state.email=="") || (this.state.password=="") || (this.state.name=="") || (this.state.location=="") || (this.state.industry=="") || (this.state.description=="")) || (this.state.passwordOK==false) ?
+							<p>Fill out all fields and make sure password meets requirements (At least eight characters, at least one uppercase letter, one lowercase letter, a number and a symbol(!@#$&*)<br /></p>
 						:<Button onClick={this.handleSearch.bind(that)}>
 							SUBMIT
 						</Button>
