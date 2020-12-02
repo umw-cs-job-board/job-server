@@ -474,7 +474,7 @@ app.post("/create-employer", async (req, res) => {
 
 				else{
 					//try to add employer
-					console.log("employer cabout to be added");
+					console.log("employer about to be added");
 					const template3 = "INSERT INTO employers (name, email, password, location, industry, description) VALUES ($1, $2, $3, $4, $5, $6)";
 					const response3 = await pool.query(template3, [
 						name_check,
@@ -484,8 +484,21 @@ app.post("/create-employer", async (req, res) => {
 						industry_check,
 						description_check
 						]);
+
+
+					//need to look up id of newly created user and send back as id in json
+					const template4 = "SELECT * FROM employers WHERE email = $1";
+					const response4 = await pool.query(template4, [email_check]);
+
+					//console.log("response4: ");
+					//console.log(response4);
+					//console.log(response4.rows[0].id);
+
 					console.log("employer added");
-					res.json({ status : "success" });
+					res.json({ status : "success",
+						id : response4.rows[0].id, 
+						user_type: "employer"
+					 });
 				}
 			}
 		}
@@ -497,6 +510,10 @@ app.post("/create-employer", async (req, res) => {
 	}
 
 });
+
+
+
+
 
 //checks email and password, returns status, user's info and whether they are admin or employer
 

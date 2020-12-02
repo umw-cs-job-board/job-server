@@ -13,6 +13,7 @@ import Row from 'react-bootstrap/Row';
 class CreateEmployer extends React.Component {
 
 	async handleSearch(evt) {
+		
 		console.log("starting handleSearch");
 		const that2 = this;
 
@@ -27,13 +28,14 @@ class CreateEmployer extends React.Component {
 		});
 		this.setState({ loggedInUser });
 		if (loggedInUser.status == "success") {
-
-			jsCookie.set("email", loggedInUser.email);
-			jsCookie.set("password", loggedInUser.password);
-			jsCookie.set("name", loggedInUser.name);
-			jsCookie.set("location", loggedInUser.location);
-			jsCookie.set("industry", loggedInUser.industry);
-			jsCookie.set("description", loggedInUser.description);
+			console.log("loggedInUser: ");
+			console.log(loggedInUser);
+			jsCookie.set("email", this.state.email);
+			//jsCookie.set("password", this.state.password);
+			jsCookie.set("name", this.state.name);
+			jsCookie.set("location", this.state.location);
+			jsCookie.set("industry", this.state.industry);
+			jsCookie.set("description", this.state.description);
 			jsCookie.set("id", loggedInUser.id);
 			jsCookie.set(loggedInUser.user_type, "true"); 
 			console.log("Cookies are set.")
@@ -72,13 +74,24 @@ class CreateEmployer extends React.Component {
 	constructor(props) {
 	  	super(props);
 	  	this.state = {
-	  		email: "Enter your email address", 
-		  	password: "Enter your password",
-		  	name: "Enter the name of your company/organization",
-		  	location: "Enter your location",
-		  	industry: "Enter your industry type",
-		  	description: "Enter your description"
+	  		email: "", 
+		  	password: "",
+		  	name: "",
+		  	location: "",
+		  	industry: "",
+		  	description: ""
 		};
+
+		jsCookie.remove('name');
+	    jsCookie.remove('email');
+	    jsCookie.remove('password');
+	    jsCookie.remove('location');
+	    jsCookie.remove('industry');
+	    jsCookie.remove('description');
+	    jsCookie.remove('user_type');
+	    jsCookie.remove('admin');
+	    jsCookie.remove('employer');  
+		
 	}
 
 	async handleEmailUpdate(evt){
@@ -117,77 +130,75 @@ class CreateEmployer extends React.Component {
 			<h1>Create an employer profile </h1>
 
 			
-			Username&nbsp;&nbsp;
-			<input
-			type="text"
-			className="text-style"
-			value={this.state.email}
-			onChange={this.handleEmailUpdate.bind(this)}
-			/>
+			<Form>
 
-			<br /><br />
+				<Row>
 
-			Password&nbsp;&nbsp;
-			<input
-			type="password"
-			className="text-style"
-			value={this.state.password}
-			onChange={this.handlePasswordUpdate.bind(this)}
-			/>
+					<Col>
+						<Form.Group controlId="formEmail">
+						<Form.Label>Email</Form.Label>
+						<Form.Control type="text" placeholder="Enter your email address." value={this.state.email} onChange={this.handleEmailUpdate.bind(this)} />
+						</Form.Group>
+					</Col>
+
+
+					<Col>
+						<Form.Group controlId="formPassword">
+						<Form.Label>Password</Form.Label>
+						<Form.Control type="password"  placeholder="Enter your password." value={this.state.password} onChange={this.handlePasswordUpdate.bind(this)} />
+						</Form.Group>
+					</Col>
+
+				</Row>
+
+
+				<Row>
+
+					<Col>
+						<Form.Group controlId="formName">
+						<Form.Label>Company / organization name</Form.Label>
+						<Form.Control type="text" value={this.state.name}  placeholder="Enter your company / organization name." onChange={this.handleNameUpdate.bind(this)} />
+						</Form.Group>
+					</Col>
+
+					<Col>
+						<Form.Group controlId="formIndustry">
+						<Form.Label>Industry</Form.Label>
+						<Form.Control type="text" value={this.state.industry}  placeholder="Enter your industry." onChange={this.handleIndustryUpdate.bind(this)} />
+						</Form.Group>
+					</Col>
+
+					<Col>
+						<Form.Group controlId="formLocation">
+						<Form.Label>Location</Form.Label>
+						<Form.Control type="text" value={this.state.location}  placeholder="Enter your city and state." onChange={this.handleLocationUpdate.bind(this)} />
+						</Form.Group>
+					</Col>
+
+				</Row>
+				<Row>
 			
 
+					<Col>
+						<Form.Group controlId="formDescription">
+						<Form.Label>Description</Form.Label>
+						<Form.Control as="textarea" rows={3} placeholder="Enter your description." type="text" value={this.state.description} onChange={this.handleDescriptionUpdate.bind(this)} />
+						</Form.Group>
+					</Col>
 
-			<br /><br />
-
-			Company / organization name&nbsp;&nbsp;
-			<input
-			type="text"
-			className="text-style"
-			value={this.state.name}
-			onChange={this.handleNameUpdate.bind(this)}
-			/>
+				</Row>
 
 
-			<br /><br />
+				{((this.state.email=="") || (this.state.password=="") || (this.state.name=="") || (this.state.location=="") || (this.state.industry=="") || (this.state.description==""))  ?
+							<p>Fill out all fields!<br /></p>
+						:<Button onClick={this.handleSearch.bind(that)}>
+							SUBMIT
+						</Button>
+				}
 
-			Industry&nbsp;&nbsp;
-			<input
-			type="text"
-			className="text-style"
-			value={this.state.industry}
-			onChange={this.handleIndustryUpdate.bind(this)}
-			/>
+			</Form>
 
-
-			<br /><br />
-
-			Location&nbsp;&nbsp;
-			<input
-			type="text"
-			className="text-style"
-			value={this.state.location}
-			onChange={this.handleLocationUpdate.bind(this)}
-			/>
-
-
-			<br /><br />
-
-			Description&nbsp;&nbsp;
-			<input
-			type="text"
-			className="text-style"
-			value={this.state.description}
-			onChange={this.handleDescriptionUpdate.bind(this)}
-			/>
-
-
-
-			<br /><br />
-
-			<Button onClick={this.handleSearch.bind(that)}>
-			SUBMIT
-			</Button>
-
+			<br />
 
 			{('loggedInUser' in this.state ) ?
 				<div>
