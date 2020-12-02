@@ -127,6 +127,21 @@ class CreateEmployer extends React.Component {
 		return (
 			<MyLayout current="login">
 
+
+
+		<span className="bglightblueshaded boxsmall">
+			<b>&nbsp;&nbsp;<a href="/login">LOG IN</a>&nbsp;&nbsp;</b>
+		</span>&nbsp;&nbsp;
+		<span href="#" className="bglightblue boxsmall">
+			<b>&nbsp;&nbsp;SIGN UP&nbsp;&nbsp;</b>
+		</span>
+
+		<div className="bglightblue boxsmall col">
+			<div className="bgwhite box col">
+		        <div>
+
+
+
 			<h1>Create an employer profile </h1>
 
 			
@@ -198,22 +213,22 @@ class CreateEmployer extends React.Component {
 
 			</Form>
 
-			<br />
+			
 
 			{('loggedInUser' in this.state ) ?
 				<div>
 				{(this.state.loggedInUser.status == "email already exists") ?
-					<p><b>The email address has already been used. Use a different email address or try logging in.</b></p>
+					<p><br /><b>The email address has already been used. Use a different email address or try logging in.</b></p>
 				: null}
 
 
 				{(this.state.loggedInUser.status == "name already exists") ?
-					<p><b>The employer name has already been taken. Use a different name.</b></p>
+					<p><br /><b>The employer name has already been taken. Use a different name.</b></p>
 				: null}
 
 
 				{(this.state.loggedInUser.status == "error") ?
-					<p><b>There was an error creating an account. If the problem persists, contact an Administrator.</b></p>
+					<p><br /><b>There was an error creating an account. If the problem persists, contact an Administrator.</b></p>
 				: null}
 
 
@@ -226,6 +241,9 @@ class CreateEmployer extends React.Component {
 
 
 
+</div>
+</div>
+</div>
 
 			<style jsx>{``}</style>
 
