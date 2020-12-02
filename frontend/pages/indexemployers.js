@@ -57,10 +57,8 @@ class Home extends React.Component {
 			<div className="bgwhite box col">
 		        <div>
 
-
-
-
 	        <div>
+               
                
               <Form> 
 

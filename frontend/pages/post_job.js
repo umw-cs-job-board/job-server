@@ -130,6 +130,8 @@ class PostJob extends React.Component{
 				{((this.state.title=="") || (this.state.employer_name=="") || (this.state.location=="") || (this.state.start_date=="") || (this.state.end_date=="") || (this.state.description==""))  ?
 					<p>Fill out all fields!<br /></p>
 				:<p><Button onClick={this.submit.bind(this)}>Submit</Button><br /></p>}
+				
+
 				{(('create' in this.state) && (this.state.create.status == 200))?
 					<p>Job successfully submitted!<br /></p>
 					: null
