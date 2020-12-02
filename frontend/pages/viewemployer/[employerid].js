@@ -36,9 +36,36 @@ const Post = props => {
       setReview("Yes");
     }
 
-    const deleteReview = (evt) => {
 
+    //post request
+    //user_info is json object with email, password, name, industry, location, description
+    const deleteReview = (review) => {
+        const header = {
+            Accept: "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+        };
+        console.log("deleting review: ")
+        console.log(review);  
+        const searchParams = new URLSearchParams(review);
+
+        console.log(searchParams);  
+        return fetch("http://localhost:8080/delete-review", {
+            method: "POST",
+            headers: header,
+            body: searchParams
+
+        }).then(function(resp) {
+            console.log("returning json");
+            return resp.json();
+        });
+    
+        //alert(review.id);
     }
+
+
+
+
+
     return (
 
     <MyLayout>
@@ -76,7 +103,12 @@ const Post = props => {
                             <tr>{item.reviewer} ({item.affiliation})</tr>
                             <tr>{item.posted_date}: {item.description}</tr>
                             {jsCookie.get("admin") ?
-                                <a class="badge badge-dark" value={item.id} onClick={e => set_id(e.target.value)}>DELETE REVIEW</a>
+ 
+                               <Link href="../viewemployer/[props.result.id]" as={`../viewemployer/${props.result.id}`} >
+                                 <a class="badge badge-dark" onClick={e => {deleteReview({id:item.id}); alert("Review deleted.");}}>DELETE REVIEW</a>
+                               </Link>
+
+
                             : null}
                         </td>
 
@@ -152,8 +184,18 @@ const Post = props => {
 
                 {(({reviewer}=="") || ({title}=="") || ({description}=="") || ({posted_date}=="") || ({affiliation}=="") || ({rating}==""))  ?
                     <p>Fill out all fields!<br /></p>
-                :<p><Button onClick={handleSubmit}>Submit</Button><br /></p>}
-                
+                :<p>
+                <Link href="../viewemployer/[props.result.id]" as={`../viewemployer/${props.result.id}`} >
+                    <Button onClick={d => {handleSubmit(); alert("Review added.");}}>Submit</Button>
+                </Link>
+                <br /></p>
+                }
+
+
+
+
+
+
                 {({review} && ({review} == "Yes"))?
                     <p>Review successfully submitted!<br /></p>
                     : null

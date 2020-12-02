@@ -599,6 +599,30 @@ app.post("/check-login", async (req, res) =>
 
 
 
+
+
+//create job and add it to the database
+app.post("/delete-review", async (req, res) => {
+
+	try {
+		//just outputs the json to console right now.
+		//format {id:<number id of the review>}
+		//so id number would be req.body.id
+		console.log(req.body);
+		
+	} catch (err) {
+		res.sendStatus(400);
+		console.log(err);
+	}
+
+});
+
+
+
+
+
+
+
 app.listen(app.get("port"), () => {
 	console.log(`Find the server at: http://localhost:${app.get("port")}/`);
 });
