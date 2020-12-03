@@ -79,8 +79,12 @@ const Post = props => {
         
         { jsCookie.get("admin") || (jsCookie.get("employer") && jsCookie.get("id") == props.result.id) ?
             <p>
-                <Link href="../deleteemployer/[props.result.id]" as={`../deleteemployer/${props.result.id}`} >
-                    <Button>DELETE THIS EMPLOYER</Button>
+                <Link href="../deleteemployer/[props.result.id]" as={`../deleteemployer/${props.result.id}` } >
+                    <Button >DELETE THIS EMPLOYER</Button>
+                </Link>
+                <a> </a>
+                <Link href="../updateemployer/[props.result.id]" as={`../updateemployer/${props.result.id}`} >
+                    <Button >UPDATE THIS EMPLOYER</Button>
                 </Link>
             </p>
         : null}

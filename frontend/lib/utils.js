@@ -130,6 +130,13 @@ async function findemployerbyid(idnum){
 	})
 }
 
+async function findemployerbyid2(idnum){
+	return await fetch(`http://localhost:8080/find-employer-by-id-2?id=${idnum}`).then(function(resp){
+		console.log("idnum " + idnum);
+		return resp.json();
+	})
+}
+
 async function postEmployer(info){
 	const header = {
 		'Accept': "application/json",
@@ -139,6 +146,21 @@ async function postEmployer(info){
 	const searchParams = new URLSearchParams(info);
 
 	return await fetch("http://localhost:8080/create-employer", {
+		method: "POST",
+		headers: header,
+		body: searchParams
+	});
+}
+
+async function editEmployer(info){
+	const header = {
+		'Accept': "application/json",
+		'Content-Type': 'application/x-www-form-urlencoded'
+	};
+
+	const searchParams = new URLSearchParams(info);
+
+	return await fetch("http://localhost:8080/edit-employer", {
 		method: "POST",
 		headers: header,
 		body: searchParams
@@ -205,8 +227,14 @@ module.exports = {
 	createEmployer: function(info){
 		return postEmployer(info).catch(handleError);
 	},
+	editEmployer: function(info){
+		return editEmployer(info).catch(handleError);
+	},
 	findemployerbyid: function(info){
 		return findemployerbyid(info).catch(handleError);
+	},
+	findemployerbyid2: function(info){
+		return findemployerbyid2(info).catch(handleError);
 	},
 	getemployers: function(){
 		return getEmployer().catch(handleError);

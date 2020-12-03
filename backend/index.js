@@ -136,7 +136,7 @@ app.post("/edit-employer", async (req, res) => {
 		if(response.rowCount == 1) {
 			console.log("employer about to be updated");
 			
-			const template2 = "UPDATE employers SET (name, email, password, location, industry, description) = ($1, $2, $3, $4, $5, $6) WHERE id = $7";
+			const template2 = "UPDATE employers SET (email, password, name, location, industry, description) = ($1, $2, $3, $4, $5, $6) WHERE id = $7";
 			const response2 = await pool.query(template2, [
 				email_check,
 				password_check,
@@ -358,6 +358,35 @@ app.get("/find-employer-by-id", async (req, res) => {
 			return{
 				id: item.id,
 				name: item.name,
+				location: item.location,
+				industry: item.industry,
+				description: item.description
+
+			}
+		});
+		const ret = {rows: employerslist}
+
+		res.json(ret);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
+
+app.get("/find-employer-by-id-2", async (req, res) => {
+	const id = req.query.id;
+	console.log(id);
+	try {
+		const template = "SELECT id, name, email, password, location, industry, description FROM employers WHERE id = $1 AND name != 'UMW CPSC'";
+		const response = await pool.query(template, [id]);
+		console.log(response);
+
+		const employerslist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				name: item.name,
+				email: item.email,
+				password: item.password,
 				location: item.location,
 				industry: item.industry,
 				description: item.description
