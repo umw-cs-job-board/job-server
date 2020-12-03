@@ -106,6 +106,23 @@ async function get_reviews_by_emp(idnum){
 	})
 }
 
+async function delete_review(idnum){
+	console.log("delete review in utils.js");
+
+	const header = {
+    	'Accept': 'application/json',
+    	'Content-Type': 'application/x-www-form-urlencoded'
+    };
+
+    const searchParams = new URLSearchParams(idnum);
+
+    return await fetch("http://localhost:8080/delete-review", {
+        method: "DELETE",
+        headers: header,
+		body: searchParams
+    });
+}
+
 async function findemployerbyid(idnum){
 	return await fetch(`http://localhost:8080/find-employer-by-id?id=${idnum}`).then(function(resp){
 		console.log("idnum " + idnum);
@@ -185,8 +202,6 @@ module.exports = {
 	removeJob: function(info){
 		return deleteJob(info).catch(handleError);
 	},
-
-
 	createEmployer: function(info){
 		return postEmployer(info).catch(handleError);
 	},
@@ -210,8 +225,10 @@ module.exports = {
 	},
 	flag_review: function(info){
 		return flag_reviews(info).catch(handleError);
+	},
+	remove_review: function(info){
+		return delete_review(info).catch(handleError);
 	}
-
 
 }
 

@@ -1,3 +1,4 @@
+import { remove_review } from '../../lib/utils.js';
 import { findemployerbyid } from '../../lib/utils.js';
 import { get_reviews } from '../../lib/utils.js';
 import { create_reviews } from '../../lib/utils.js';
@@ -23,7 +24,6 @@ const Post = props => {
     const [affiliation, setAffiliation] = useState("");
     const [rating, setRating] = useState("");
     const [review, setReview] = useState("No");
-    const [review_id, set_id] = useState("0");
     const [show, setShow] = useState(false);
 
     const handleSubmit = (evt) => {
@@ -48,35 +48,12 @@ const Post = props => {
         setShow(true);
     }
 
-
-    //post request
-    //user_info is json object with email, password, name, industry, location, description
-    const deleteReview = (review) => {
-        const header = {
-            Accept: "application/json",
-            "Content-Type": "application/x-www-form-urlencoded"
-        };
-        console.log("deleting review: ")
-        console.log(review);  
-        const searchParams = new URLSearchParams(review);
-
-        console.log(searchParams);  
-        return fetch("http://localhost:8080/delete-review", {
-            method: "POST",
-            headers: header,
-            body: searchParams
-
-        }).then(function(resp) {
-            console.log("returning json");
-            return resp.json();
+    const deleteReview = (evt) => {
+        console.log("idnum  " + evt);
+        const Delete = remove_review({
+            id: evt
         });
-    
-        //alert(review.id);
     }
-
-
-
-
 
     return (
 
@@ -134,7 +111,7 @@ const Post = props => {
                                    :null}
                                    {' '}
                                    <Link href="../viewemployer/[props.result.id]" as={`../viewemployer/${props.result.id}`} >
-                                     <Button size="sm" variant="dark" value={item.id} onClick={e => {deleteReview({id:item.id}); alert("Review deleted.");}}>DELETE REVIEW</Button>
+                                     <Button size="sm" variant="dark" value={item.id} onClick={e => {deleteReview(e.target.value); alert("Review deleted.");}}>DELETE REVIEW</Button>
                                    </Link>
 
                                </p>

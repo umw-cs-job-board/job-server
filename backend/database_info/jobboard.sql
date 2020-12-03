@@ -12,7 +12,7 @@ CREATE TABLE employers
 	industry VARCHAR(100) NOT NULL, 
 	description VARCHAR NOT NULL 
 );
-GRANT SELECT, INSERT, DELETE ON employers TO jbuser;
+GRANT SELECT, INSERT, UPDATE, DELETE ON employers TO jbuser;
 GRANT USAGE ON employers_id_seq TO jbuser;
 
 INSERT INTO employers(name, email, password, location, industry, description) VALUES ('CACI', 'caci@gmail.com', 'caci', 'Quantico, Va.', 'Airline Supply', 'We supply airplane parts to US military organizations');

@@ -148,15 +148,15 @@ app.post("/edit-employer", async (req, res) => {
 				]);
 			//const response2 = await pool.query(template2, [name_check, email_check, password_check, location_check, industry_check, description_check]);
 		
-			res.json({status: "employer edited"});		
+			res.json({"status": "employer edited"});		
 		} 
 		//if there's not only one employer with that id, error
 		else {
 			console.error("irregular number of employer");
-			res.json({status: "irregular number of employer"});
+			res.json({"status": "irregular number of employer"});
 		}
 	} catch (err) {
-		res.json({status: "error editing employer"});
+		res.json({"status": "error editing employer"});
 		console.log(err);
 	}
 
@@ -165,21 +165,18 @@ app.post("/edit-employer", async (req, res) => {
 //removing a review by ID - Each review will have an independant ID
 app.delete("/delete-review", async (req, res) => {
 	const id = req.body.id;
-	console.log("running remove review api");
+	console.log("running delete-review api");
 	
 	try {
 		//retrieving information
-		console.log("req.body ");
-		console.log(req.body);
 
-		console.log("id ");
-		console.log(id);
+		console.log("id " + id);
 
 		const template1 = "SELECT title FROM reviews WHERE id = $1";
 		const response1 = await pool.query(template1, [id]);
 		
 		console.log("response1 ");
-		console.log(response);
+		console.log(response1);
 
 		//If the review job is not found in the job database matching the id, then error.
 		if (response1.rowCount == 0) {
@@ -191,7 +188,7 @@ app.delete("/delete-review", async (req, res) => {
 			const template2 = "DELETE FROM reviews WHERE id = $1";
 			const response1 = await pool.query(template2, [id]);
 			console.log("deleting review");
-			res.json({status: "review deleted"});
+			res.json({"status": "review deleted"});
 		}
 	} catch (err) {
 		res.json({status: "error: review not deleted"});
