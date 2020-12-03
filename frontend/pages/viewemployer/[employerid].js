@@ -1,6 +1,7 @@
 import { findemployerbyid } from '../../lib/utils.js';
 import { get_reviews } from '../../lib/utils.js';
 import { create_reviews } from '../../lib/utils.js';
+import { flag_review } from '../../lib/utils.js';
 import Link from 'next/link';
 import MyLayout from '../../components/mylayout.js';
 import jsCookie from "js-cookie";
@@ -9,6 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Alert from 'react-bootstrap/Alert';
 import React, { useState } from "react";
 
 
@@ -22,6 +24,7 @@ const Post = props => {
     const [rating, setRating] = useState("");
     const [review, setReview] = useState("No");
     const [review_id, set_id] = useState("0");
+    const [show, setShow] = useState(false);
 
     const handleSubmit = (evt) => {
       const Review = create_reviews({
@@ -34,16 +37,64 @@ const Post = props => {
         rating: rating
       });
       setReview("Yes");
+      window.location.reload(true);
     }
 
-    const deleteReview = (evt) => {
-
+    const flagReview = (evt) => {
+        console.log("flagReview, evt: " + evt);
+        const Flag = flag_review({
+            id: evt
+        });
+        setShow(true);
     }
+
+
+    //post request
+    //user_info is json object with email, password, name, industry, location, description
+    const deleteReview = (review) => {
+        const header = {
+            Accept: "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+        };
+        console.log("deleting review: ")
+        console.log(review);  
+        const searchParams = new URLSearchParams(review);
+
+        console.log(searchParams);  
+        return fetch("http://localhost:8080/delete-review", {
+            method: "POST",
+            headers: header,
+            body: searchParams
+
+        }).then(function(resp) {
+            console.log("returning json");
+            return resp.json();
+        });
+    
+        //alert(review.id);
+    }
+
+
+
+
+
     return (
 
     <MyLayout>
 
     <div>
+
+        {show==true ?
+            <Alert variant="danger" onClose={() => setShow(false)}>
+                <Alert.Heading>The review has been flagged</Alert.Heading>
+                <p>The review will be sent to an administrator for evaluation</p>
+                <div className="d-flex justify-content-end">
+                  <Button onClick={() => setShow(false)} variant="outline-danger">Close</Button>
+                </div>
+            </Alert> 
+          : null
+        }
+
         <h1>{props.result.name}</h1>
         <p>Industry: {props.result.industry}</p>
         <p>Location: {props.result.location}</p>
@@ -76,8 +127,19 @@ const Post = props => {
                             <tr>{item.reviewer} ({item.affiliation})</tr>
                             <tr>{item.posted_date}: {item.description}</tr>
                             {jsCookie.get("admin") ?
-                                <a class="badge badge-dark" value={item.id} onClick={e => set_id(e.target.value)}>DELETE REVIEW</a>
-                            : null}
+
+                               <p>
+                                   {item.flagged == true ?
+                                      <Button size="sm" variant="warning" disabled>FLAGGED</Button>
+                                   :null}
+                                   {' '}
+                                   <Link href="../viewemployer/[props.result.id]" as={`../viewemployer/${props.result.id}`} >
+                                     <Button size="sm" variant="dark" value={item.id} onClick={e => {deleteReview({id:item.id}); alert("Review deleted.");}}>DELETE REVIEW</Button>
+                                   </Link>
+
+                               </p>
+                            : <p><Button size="sm" variant="dark" value={item.id} onClick={e => flagReview(e.target.value)}>FLAG REVIEW</Button><br /></p>
+                            }
                         </td>
 
                     </tr>
@@ -152,9 +214,17 @@ const Post = props => {
 
                 {(({reviewer}=="") || ({title}=="") || ({description}=="") || ({posted_date}=="") || ({affiliation}=="") || ({rating}==""))  ?
                     <p>Fill out all fields!<br /></p>
-                :<p><Button onClick={handleSubmit}>Submit</Button><br /></p>}
+                :<p>
+                <Link href="../viewemployer/[props.result.id]" as={`../viewemployer/${props.result.id}`} >
+                    <Button onClick={d => {handleSubmit(); alert("Review added.");}}>Submit</Button>
+                </Link>
+                <br /></p>
+                }
+
+
+
                 
-                {({review} && ({review} == "Yes"))?
+                {({review} == "Yes")?
                     <p>Review successfully submitted!<br /></p>
                     : null
                 }

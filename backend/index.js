@@ -163,7 +163,7 @@ app.post("/edit-employer", async (req, res) => {
 });
 
 //removing a review by ID - Each review will have an independant ID
-app.delete("/remove-review", async (req, res) => {
+app.delete("/delete-review", async (req, res) => {
 	const id = req.body.id;
 	console.log("running remove review api");
 	
@@ -197,6 +197,43 @@ app.delete("/remove-review", async (req, res) => {
 		res.json({status: "error: review not deleted"});
 		console.log(err);
 	}
+});
+
+//add flag to review and add it to the database
+app.post("/flag-review", async (req, res) => {
+
+	console.log("----------");
+
+	try {
+		
+		console.log(req.body);
+
+		const review_id = req.body.id;
+
+
+		//if parameter is missing while trying to add, return error
+		if (review_id == null) {
+			console.error("info missing");
+			console.log("review_id, " + review_id);
+			res.json({ error : "info missing"});			
+		}
+
+		else {
+			
+			console.log("review about to be updated as flagged");
+
+			const template = "UPDATE reviews SET flagged = true WHERE id = $1";
+			const response = await pool.query(template, [review_id]);
+			console.log("review updated as flagged");
+			res.json({ "status" : "review updated as flagged" });
+			
+		}
+	} catch (err) {
+		res.sendStatus(400);
+
+		console.log(err);
+	}
+
 });
 
 //Remove Job
@@ -339,10 +376,6 @@ app.get("/find-employer-by-id", async (req, res) => {
 		}
 });
 
-
-
-
-
 app.get("/search-employers", async(req, res) =>{
 	const query = req.query.q;
 
@@ -376,8 +409,6 @@ app.get("/search-employers", async(req, res) =>{
 		console.error(err);
 	}
 });
-
-
 
 //Remove employer
 app.delete("/remove-employer", async (req, res) => {
@@ -427,7 +458,7 @@ app.get("/find-review-by-id", async (req, res) => {
 	const id = req.query.id;
 	console.log(id);
 	try {
-		const template = "SELECT id, emp_id, reviewer, title, description, posted_date, affiliation, rating FROM reviews WHERE emp_id = $1";
+		const template = "SELECT id, emp_id, reviewer, title, description, posted_date, affiliation, flagged, rating FROM reviews WHERE emp_id = $1";
 		const response = await pool.query(template, [id]);
 
 		console.log(response);
@@ -441,7 +472,8 @@ app.get("/find-review-by-id", async (req, res) => {
 				description: item.description,
 				posted_date: dateFormat(item.posted_date, "isoDate"),
 				affiliation: item.affiliation,
-				rating: item.rating
+				rating: item.rating,
+				flagged: item.flagged
 
 			}
 		});
@@ -454,8 +486,7 @@ app.get("/find-review-by-id", async (req, res) => {
 		}
 });
 
-
-//create job and add it to the database
+//create review and add it to the database
 app.post("/create-review", async (req, res) => {
 
 	console.log("----------");
@@ -505,13 +536,92 @@ app.post("/create-review", async (req, res) => {
 
 });
 
+//Create Employer Acct
+app.post("/create-employer", async (req, res) => {
+
+	console.log("----------");
+
+	try {
+		
+		console.log(req.body);
+		//email, password, name, industry, location, description
+		const email_check = req.body.email;
+		const password_check = req.body.password;
+		const name_check = req.body.name;
+		const location_check = req.body.location;
+		const industry_check = req.body.industry;
+		const description_check = req.body.description;
+
+		//if parameter is missing while trying to add, return error
+		if (email_check == null || password_check == null || name_check == null || location_check == null || industry_check == null || description_check == null) {
+			console.error("info missing")
+			res.json({ status : "error"});			
+		}
+
+		else {
+			
+			console.log("employer credentials being checked");
+
+			//check if email exists
+			const template = "SELECT * FROM employers WHERE email = $1";
+			const response = await pool.query(template, [email_check]);
+
+			if(response.rowCount >= 1){
+				console.error("email already exists");
+				res.json({ status : "email already exists" });
+			} 
+
+			else{
+				//check if name exists			
+				const template2 = "SELECT * FROM employers WHERE name = $1";
+				const response2 = await pool.query(template2, [name_check]);
+
+				if(response2.rowCount >= 1){
+					console.error("name already exists");
+					res.json({ status : "name already exists" });
+				}
+
+				else{
+					//try to add employer
+					console.log("employer about to be added");
+					const template3 = "INSERT INTO employers (name, email, password, location, industry, description) VALUES ($1, $2, $3, $4, $5, $6)";
+					const response3 = await pool.query(template3, [
+						name_check,
+						email_check,
+						password_check,
+						location_check,
+						industry_check,
+						description_check
+						]);
 
 
+					//need to look up id of newly created user and send back as id in json
+					const template4 = "SELECT * FROM employers WHERE email = $1";
+					const response4 = await pool.query(template4, [email_check]);
+
+					//console.log("response4: ");
+					//console.log(response4);
+					//console.log(response4.rows[0].id);
+
+					console.log("employer added");
+					res.json({ status : "success",
+						id : response4.rows[0].id, 
+						user_type: "employer"
+					 });
+				}
+			}
+		}
+	} catch (err) {
+		res.sendStatus(400);
+
+		console.log(err);
+		res.json({status: "error"});
+	}
+
+});
 
 //checks email and password, returns status, user's info and whether they are admin or employer
-
-app.post("/check-login", async (req, res) => 
-{
+app.post("/check-login", async (req, res) => {
 	const employer_email = req.body.email;
 	const employer_password = req.body.password;
 	
@@ -528,7 +638,6 @@ app.post("/check-login", async (req, res) =>
 		//console.log(result.rows);
 		//console.log(result.rowCount);
 		
-
 		if (result.rowCount == 1) 
 		{
 			//console.log("starting argon2 compare");
@@ -585,12 +694,6 @@ app.post("/check-login", async (req, res) =>
 	}
 
 });
-
-
-
-
-
-
 
 app.listen(app.get("port"), () => {
 	console.log(`Find the server at: http://localhost:${app.get("port")}/`);
