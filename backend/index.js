@@ -116,6 +116,88 @@ app.get("/find-job-by-id", async (req, res) => {
 		}
 });
 
+//Edit Employer Acct
+app.post("/edit-employer", async (req, res) => {
+	console.log("----------");
+	try {	
+		//email, password, name, industry, location, description
+		const email_check = req.body.email;
+		const password_check = req.body.password;
+		const name_check = req.body.name;
+		const location_check = req.body.location;
+		const industry_check = req.body.industry;
+		const description_check = req.body.description;
+		const id_check = req.body.id;
+		//check if email exists
+		const template = "SELECT * FROM employers WHERE id = $1";
+		const response = await pool.query(template, [id_check]);
+		
+		//if there's only one employer with that id, update it
+		if(response.rowCount == 1) {
+			console.log("employer about to be updated");
+			
+			const template2 = "UPDATE employers SET (name, email, password, location, industry, description) = ($1, $2, $3, $4, $5, $6) WHERE id = $7";
+			const response2 = await pool.query(template2, [
+				email_check,
+				password_check,
+				name_check,
+				location_check,
+				industry_check,
+				description_check,
+				id_check
+				]);
+			//const response2 = await pool.query(template2, [name_check, email_check, password_check, location_check, industry_check, description_check]);
+		
+			res.json({status: "employer edited"});		
+		} 
+		//if there's not only one employer with that id, error
+		else {
+			console.error("irregular number of employer");
+			res.json({status: "irregular number of employer"});
+		}
+	} catch (err) {
+		res.json({status: "error editing employer"});
+		console.log(err);
+	}
+
+});
+
+//removing a review by ID - Each review will have an independant ID
+app.delete("/delete-review", async (req, res) => {
+	const id = req.body.id;
+	console.log("running remove review api");
+	
+	try {
+		//retrieving information
+		console.log("req.body ");
+		console.log(req.body);
+
+		console.log("id ");
+		console.log(id);
+
+		const template1 = "SELECT title FROM reviews WHERE id = $1";
+		const response1 = await pool.query(template1, [id]);
+		
+		console.log("response1 ");
+		console.log(response);
+
+		//If the review job is not found in the job database matching the id, then error.
+		if (response1.rowCount == 0) {
+			console.log("review not found");
+			res.json({ status: "error: not found"});
+		} 
+		//If the review does exist in the review database, then delete it.
+		else {
+			const template2 = "DELETE FROM reviews WHERE id = $1";
+			const response1 = await pool.query(template2, [id]);
+			console.log("deleting review");
+			res.json({status: "review deleted"});
+		}
+	} catch (err) {
+		res.json({status: "error: review not deleted"});
+		console.log(err);
+	}
+});
 
 //add flag to review and add it to the database
 app.post("/flag-review", async (req, res) => {
@@ -153,7 +235,6 @@ app.post("/flag-review", async (req, res) => {
 	}
 
 });
-
 
 //Remove Job
 app.delete("/remove-job", async (req, res) => {
@@ -295,10 +376,6 @@ app.get("/find-employer-by-id", async (req, res) => {
 		}
 });
 
-
-
-
-
 app.get("/search-employers", async(req, res) =>{
 	const query = req.query.q;
 
@@ -332,8 +409,6 @@ app.get("/search-employers", async(req, res) =>{
 		console.error(err);
 	}
 });
-
-
 
 //Remove employer
 app.delete("/remove-employer", async (req, res) => {
@@ -411,7 +486,6 @@ app.get("/find-review-by-id", async (req, res) => {
 		}
 });
 
-
 //create review and add it to the database
 app.post("/create-review", async (req, res) => {
 
@@ -461,7 +535,6 @@ app.post("/create-review", async (req, res) => {
 	}
 
 });
-
 
 //Create Employer Acct
 app.post("/create-employer", async (req, res) => {
@@ -547,14 +620,8 @@ app.post("/create-employer", async (req, res) => {
 
 });
 
-
-
-
-
 //checks email and password, returns status, user's info and whether they are admin or employer
-
-app.post("/check-login", async (req, res) => 
-{
+app.post("/check-login", async (req, res) => {
 	const employer_email = req.body.email;
 	const employer_password = req.body.password;
 	
@@ -571,7 +638,6 @@ app.post("/check-login", async (req, res) =>
 		//console.log(result.rows);
 		//console.log(result.rowCount);
 		
-
 		if (result.rowCount == 1) 
 		{
 			//console.log("starting argon2 compare");
@@ -628,36 +694,6 @@ app.post("/check-login", async (req, res) =>
 	}
 
 });
-
-
-
-
-
-
-
-
-
-//create job and add it to the database
-app.post("/delete-review", async (req, res) => {
-
-	try {
-		//just outputs the json to console right now.
-		//format {id:<number id of the review>}
-		//so id number would be req.body.id
-		console.log(req.body);
-		
-	} catch (err) {
-		res.sendStatus(400);
-		console.log(err);
-	}
-
-});
-
-
-
-
-
-
 
 app.listen(app.get("port"), () => {
 	console.log(`Find the server at: http://localhost:${app.get("port")}/`);
