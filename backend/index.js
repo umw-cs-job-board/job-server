@@ -119,10 +119,7 @@ app.get("/find-job-by-id", async (req, res) => {
 //Edit Employer Acct
 app.post("/edit-employer", async (req, res) => {
 	console.log("----------");
-
 	try {	
-		console.log(req.body);
-		console.log(id);
 		//email, password, name, industry, location, description
 		const email_check = req.body.email;
 		const password_check = req.body.password;
@@ -130,25 +127,33 @@ app.post("/edit-employer", async (req, res) => {
 		const location_check = req.body.location;
 		const industry_check = req.body.industry;
 		const description_check = req.body.description;
-
+		const id_check = req.body.id;
 		//check if email exists
-		const template = "SELECT * FROM employers WHERE email = $1";
-		const response = await pool.query(template, [email_check]);
+		const template = "SELECT * FROM employers WHERE id = $1";
+		const response = await pool.query(template, [id_check]);
 		
-		//if there's only one employer with that email, update it
+		//if there's only one employer with that id, update it
 		if(response.rowCount == 1) {
 			console.log("employer about to be updated");
 			
-			const template2 = "UPDATE employers SET (name, email, password, location, industry, description) = ($1, $2, $3, $4, $5, $6) WHERE id = $7"
-			const response2 = await pool.query(template2, [id]);
+			const template2 = "UPDATE employers SET (name, email, password, location, industry, description) = ($1, $2, $3, $4, $5, $6) WHERE id = $7";
+			const response2 = await pool.query(template2, [
+				email_check,
+				password_check,
+				name_check,
+				location_check,
+				industry_check,
+				description_check,
+				id_check
+				]);
 			//const response2 = await pool.query(template2, [name_check, email_check, password_check, location_check, industry_check, description_check]);
 		
 			res.json({status: "employer edited"});		
 		} 
-		//if there's not only one employer with that email, error
+		//if there's not only one employer with that id, error
 		else {
 			console.error("irregular number of employer");
-			res.json({status: "irregular number of employer");
+			res.json({status: "irregular number of employer"});
 		}
 	} catch (err) {
 		res.json({status: "error editing employer"});
