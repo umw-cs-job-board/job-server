@@ -50,7 +50,15 @@ const MyLayout = (props) => (
 			  <Nav.Item></Nav.Item>
 			}
 
-
+			{ jsCookie.get("admin") ? 	
+			  <Nav.Item>
+			    <Nav.Link href="/flaggedreviews"><span className="flaggedreviews">
+				    Flagged Reviews 
+			    </span></Nav.Link>
+			  </Nav.Item>
+			  :
+			  <Nav.Item></Nav.Item>
+			}
 
 			{ jsCookie.get("name") ? 
 

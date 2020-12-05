@@ -721,6 +721,39 @@ app.post("/check-login", async (req, res) => {
 
 });
 
+//Find Flagged Reviews
+app.get("/find-flagged-reviews", async (req, res) => {
+
+	try {
+		const template = "SELECT id, emp_id, reviewer, title, description, posted_date, affiliation, flagged, rating FROM reviews WHERE flagged = true";
+		const response = await pool.query(template);
+
+		console.log(response);
+
+		const reviewlist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				emp_id: item.emp_id,
+				reviewer: item.reviewer,
+				title: item.title,
+				description: item.description,
+				posted_date: dateFormat(item.posted_date, "isoDate"),
+				affiliation: item.affiliation,
+				rating: item.rating,
+				flagged: item.flagged
+
+			}
+		});
+		const ret = {rows: reviewlist}
+
+		res.json(ret);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
+
+
 app.listen(app.get("port"), () => {
 	console.log(`Find the server at: http://localhost:${app.get("port")}/`);
 });
