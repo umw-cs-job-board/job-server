@@ -723,8 +723,7 @@ app.post("/check-login", async (req, res) => {
 
 //Find Flagged Reviews
 app.get("/find-flagged-reviews", async (req, res) => {
-	const id = req.query.id;
-	console.log(id);
+
 	try {
 		const template = "SELECT id, emp_id, reviewer, title, description, posted_date, affiliation, flagged, rating FROM reviews WHERE flagged = true";
 		const response = await pool.query(template);

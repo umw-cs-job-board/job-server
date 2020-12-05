@@ -194,7 +194,7 @@ async function flag_reviews(info){
 	});
 }
 
-async function findFlaggedReviews(query){
+async function findFlaggedReviews(){
 	return await fetch(`http://localhost:8080/find-flagged-reviews`).then(function(resp){
 		return resp.json();
 	});
@@ -209,7 +209,7 @@ async function findFlaggedReviews(query){
 
 
 function handleError(error){
-	console.warn(error);
+	console.warn("THIS IS THE ERROR: " + error);
 	return null;
 }
 
@@ -263,8 +263,8 @@ module.exports = {
 	remove_review: function(info){
 		return delete_review(info).catch(handleError);
 	},
-	find_flagged_reviews: function(query){
-		return findFlaggedReviews(query).catch(handleError);
+	find_flagged_reviews: function(){
+		return findFlaggedReviews().catch(handleError);
 	}
 
 }
