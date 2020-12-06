@@ -193,12 +193,13 @@ const Post = props => {
                     </Col>
                 </Row>
 
-                {(({reviewer}=="") || ({title}=="") || ({description}=="") || ({posted_date}=="") || ({affiliation}=="") || ({rating}==""))  ?
-                    <p>Fill out all fields!<br /></p>
-                :<p>
-                <Link href="../viewemployer/[props.result.id]" as={`../viewemployer/${props.result.id}`} >
-                    <Button onClick={d => {handleSubmit(); alert("Review added.");}}>Submit</Button>
-                </Link>
+                { ( (reviewer=="") || (title=="") || (description=="") || (posted_date=="") || (affiliation=="") || (rating=="") || (isNaN(rating)) || (parseInt(rating)>5) || (parseInt(rating)<0) )  ?
+                    <p>All fields must be filled out and rating must be an integer 0-5!<br /></p>
+                :
+                <p>
+                    <Link href="../viewemployer/[props.result.id]" as={`../viewemployer/${props.result.id}`} >
+                        <Button onClick={d => {handleSubmit(); alert("Review added.");}}>Submit</Button>
+                    </Link>
                 <br /></p>
                 }
 
