@@ -1,7 +1,7 @@
 import React from "react";
-import {getjobs} from '../lib/utils.js'
-import {search} from '../lib/utils.js'
-import {removeJob} from '../lib/utils.js'
+import {getemployers} from '../lib/utils.js'
+import {searchEmployers} from '../lib/utils.js'
+import {removeEmployer} from '../lib/utils.js'
 import Link from 'next/link';
 
 import MyLayout from '../components/mylayout.js';
@@ -18,25 +18,25 @@ class Home extends React.Component {
   }
 
   async componentDidMount() {
-    const jobs = await getjobs();
-    this.setState({jobs});
+    const employers = await getemployers();
+    this.setState({employers});
   }
 
   async componentWillRender() {
-    const jobs = await getjobs();
-    this.setState({jobs});
+    const employers = await getemployers();
+    this.setState({employers});
   }
 
 
   async handleSearch(evt){
     this.setState({search: evt.target.value});
-    const jobs = await search(evt.target.value);
-    this.setState({jobs});
+    const employers = await searchEmployers(evt.target.value);
+    this.setState({employers});
   }
 
   async delete(evt){
-    const deleted = await removeJob({id: this.state.id});
-    console.log("delete job_id " + deleted);
+    const deleted = await removeEmployer({id: this.state.id});
+    console.log("delete employer_id " + deleted);
     this.setState({deleted});
   }
 
@@ -45,21 +45,21 @@ class Home extends React.Component {
       <MyLayout current="home">
         
 
-		
-		<span className="bglightblue boxsmall">
-			<b>&nbsp;&nbsp;SEARCH JOBS / INTERNSHIPS&nbsp;&nbsp;</b>
+
+		<span className="bglightblueshaded boxsmall">
+			<b>&nbsp;&nbsp;<a href="/">SEARCH JOBS / INTERNSHIPS</a>&nbsp;&nbsp;</b>
 		</span>&nbsp;&nbsp;
-		<span href="#" className="bglightblueshaded boxsmall">
-			<b>&nbsp;&nbsp;<a href="/indexemployers">SEARCH EMPLOYERS</a>&nbsp;&nbsp;</b>
+		<span href="#" className="bglightblue boxsmall">
+			<b>&nbsp;&nbsp;SEARCH EMPLOYERS&nbsp;&nbsp;</b>
 		</span>
 
 		<div className="bglightblue boxsmall col">
 			<div className="bgwhite box col">
 		        <div>
 
+	        <div>
                
-
-
+               
               <Form> 
 
                 <InputGroup className="mb-2 mr-sm-2">
@@ -74,36 +74,34 @@ class Home extends React.Component {
 
 
 
-              {this.state.jobs ? <div>
+              {this.state.employers ? <div>
 
                   <br />
 
                   <Table>
                     <thead>
                       <tr>
-                        <th>Title</th>
-                        <th>Employer</th> 
+                        <th>Name</th>
+                        <th>Industry</th> 
                         <th>Location</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
+                        <th>Description</th>
                       </tr>
                       </thead>
                     <tbody>
-                      {this.state.jobs.rows.map((item, key) =>
+                      {this.state.employers.rows.map((item, key) =>
                         <tr key={item.id}>
                           <td>
 
-                          <Link href="/viewjob/[item.id]" as={`/viewjob/${item.id}`} >
-                            <a>{item.title}</a>
+                          <Link href="/viewemployer/[item.id]" as={`/viewemployer/${item.id}`} >
+                            <a>{item.name}</a>
                           </Link>
 
 
 
                           </td>
-                          <td>{item.employer_name}</td>
+                          <td>{item.industry}</td>
                           <td>{item.location}</td>
-                          <td>{item.start_date}</td>
-                          <td>{item.end_date}</td>
+                          <td>{item.description}</td>
 
                         </tr>
                         )}
@@ -113,24 +111,17 @@ class Home extends React.Component {
 
 
               </div> : null}
-
-
-          <div>
-              <style jsx>{`
+	          <div>
+	              <style jsx>{`
                   
 
 
-              `}</style>
+	              `}</style>
+              </div>
+              </div>
           </div>
-      </div>
-
-
-
-	</div>
-	</div>
-
-
-
+          </div>
+        </div>
     </MyLayout>
 
     );

@@ -24,7 +24,7 @@ var dateFormat = require('dateformat');
 
 app.get("/api", async (req, res) => {
 	try {
-		const template = "SELECT id, title, employer_name, location, start_date, end_date, description FROM jobs ORDER BY start_date ASC";
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description, contact FROM jobs ORDER BY start_date ASC";
 		const response = await pool.query(template);
 		const joblist = response.rows.map(function(item){
 			return{
@@ -35,6 +35,7 @@ app.get("/api", async (req, res) => {
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
 				description: item.description,
+				contact: item.contact,
 				employer_id: item.employer_id
 			}
 		});
@@ -72,6 +73,7 @@ app.get("/api/search", async(req, res) =>{
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
 				description: item.description,
+				contact: item.contact,
 				employer_id: item.employer_id
 			}
 		});
@@ -86,7 +88,7 @@ app.get("/api/find-job-by-id", async (req, res) => {
 	const id = req.query.id;
 	console.log(id);
 	try {
-		const template = "SELECT id, title, employer_name, location, start_date, end_date, description, employer_id FROM jobs WHERE id = $1 ORDER BY start_date ASC";
+		const template = "SELECT id, title, employer_name, location, start_date, end_date, description, contact, employer_id FROM jobs WHERE id = $1 ORDER BY start_date ASC";
 		const response = await pool.query(template, [id]);
 
 		console.log(response);
@@ -100,6 +102,7 @@ app.get("/api/find-job-by-id", async (req, res) => {
 				start_date: dateFormat(item.start_date, "isoDate"),
 				end_date: dateFormat(item.end_date, "isoDate"),
 				description: item.description,
+				contact: item.contact,
 				employer_id: item.employer_id
 
 			}
@@ -113,9 +116,122 @@ app.get("/api/find-job-by-id", async (req, res) => {
 		}
 });
 
+//Edit Employer Acct
+app.post("/api/edit-employer", async (req, res) => {
+	console.log("----------");
+	try {	
+		//email, password, name, industry, location, description
+		const email_check = req.body.email;
+		const password_check = req.body.password;
+		const name_check = req.body.name;
+		const location_check = req.body.location;
+		const industry_check = req.body.industry;
+		const description_check = req.body.description;
+		const id_check = req.body.id;
+		//check if email exists
+		const template = "SELECT * FROM employers WHERE id = $1";
+		const response = await pool.query(template, [id_check]);
+		
+		//if there's only one employer with that id, update it
+		if(response.rowCount == 1) {
+			console.log("employer about to be updated");
+			
+			const template2 = "UPDATE employers SET (email, password, name, location, industry, description) = ($1, $2, $3, $4, $5, $6) WHERE id = $7";
+			const response2 = await pool.query(template2, [
+				email_check,
+				password_check,
+				name_check,
+				location_check,
+				industry_check,
+				description_check,
+				id_check
+				]);
+			//const response2 = await pool.query(template2, [name_check, email_check, password_check, location_check, industry_check, description_check]);
+		
+			res.json({"status": "employer edited"});		
+		} 
+		//if there's not only one employer with that id, error
+		else {
+			console.error("irregular number of employer");
+			res.json({"status": "irregular number of employer"});
+		}
+	} catch (err) {
+		res.json({"status": "error editing employer"});
+		console.log(err);
+	}
+
+});
+
+//removing a review by ID - Each review will have an independant ID
+app.delete("/api/delete-review", async (req, res) => {
+	const id = req.body.id;
+	console.log("running delete-review api");
+	
+	try {
+		//retrieving information
+
+		console.log("id " + id);
+
+		const template1 = "SELECT title FROM reviews WHERE id = $1";
+		const response1 = await pool.query(template1, [id]);
+		
+		console.log("response1 ");
+		console.log(response1);
+
+		//If the review job is not found in the job database matching the id, then error.
+		if (response1.rowCount == 0) {
+			console.log("review not found");
+			res.json({ status: "error: not found"});
+		} 
+		//If the review does exist in the review database, then delete it.
+		else {
+			const template2 = "DELETE FROM reviews WHERE id = $1";
+			const response1 = await pool.query(template2, [id]);
+			console.log("deleting review");
+			res.json({"status": "review deleted"});
+		}
+	} catch (err) {
+		res.json({status: "error: review not deleted"});
+		console.log(err);
+	}
+});
+
+//add flag to review and add it to the database
+app.post("/api/flag-review", async (req, res) => {
+
+	console.log("----------");
+
+	try {
+		
+		console.log(req.body);
+
+		const review_id = req.body.id;
 
 
+		//if parameter is missing while trying to add, return error
+		if (review_id == null) {
+			console.error("info missing");
+			console.log("review_id, " + review_id);
+			res.json({ error : "info missing"});			
+		}
 
+		else {
+			
+			console.log("review about to be updated as flagged");
+
+			const template = "UPDATE reviews SET flagged = true WHERE id = $1";
+			const response = await pool.query(template, [review_id]);
+			console.log("review updated as flagged");
+			res.json({ "status" : "review updated as flagged" });
+			
+		}
+	} catch (err) {
+		res.sendStatus(400);
+
+		console.log(err);
+	}
+
+});
 
 //Remove Job
 app.delete("/api/remove-job", async (req, res) => {
@@ -172,10 +288,11 @@ app.post("/api/create-job", async (req, res) => {
 		const start_date_to_add = req.body.start_date;
 		const end_date_to_add = req.body.end_date;
 		const description_to_add = req.body.description;
+		const contact_to_add = req.body.contact;
 		const employer_id_to_add = req.body.employer_id;
 
 		//if parameter is missing while trying to add, return error
-		if (title_to_add == null || employer_name_to_add == null || location_to_add == null || start_date_to_add == null || end_date_to_add == null || description_to_add == null) {
+		if (title_to_add == null || employer_name_to_add == null || location_to_add == null || start_date_to_add == null || end_date_to_add == null || description_to_add == null || contact_to_add == null) {
 			console.error("info missing")
 			res.json({ error : "info missing"});			
 		}
@@ -184,7 +301,7 @@ app.post("/api/create-job", async (req, res) => {
 			
 			console.log("job about to be added");
 
-			const template2 = "INSERT INTO jobs (title, employer_name, location, start_date, end_date, description, employer_id) VALUES ($1, $2, $3, TO_DATE($4, 'YYYY-MM-DD'), TO_DATE($5, 'YYYY-MM-DD'), $6, $7)";
+			const template2 = "INSERT INTO jobs (title, employer_name, location, start_date, end_date, description, contact, employer_id) VALUES ($1, $2, $3, TO_DATE($4, 'YYYY-MM-DD'), TO_DATE($5, 'YYYY-MM-DD'), $6, $7, $8)";
 			const response2 = await pool.query(template2, [
 				title_to_add,
 				employer_name_to_add,
@@ -192,6 +309,7 @@ app.post("/api/create-job", async (req, res) => {
 				start_date_to_add,
 				end_date_to_add,
 				description_to_add,
+				contact_to_add,
 				employer_id_to_add
 				]);
 			console.log("job added");
@@ -206,17 +324,329 @@ app.post("/api/create-job", async (req, res) => {
 
 });
 
+//get all employers
+app.get("/api/get-employer", async (req, res) => {
+	try {
+		const template = "SELECT id, name, location, industry, description FROM employers WHERE name != 'UMW CPSC' ORDER BY name ASC";
+		const response = await pool.query(template);
+		const employerlist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				name: item.name,
+				location: item.location,
+				industry: item.industry,
+				description: item.description
+			}
+		});
+		const ret = {rows: employerlist}
+		res.json(ret);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
+
+app.get("/api/find-employer-by-id", async (req, res) => {
+	const id = req.query.id;
+	console.log(id);
+	try {
+		const template = "SELECT id, name, location, industry, description FROM employers WHERE id = $1 AND name != 'UMW CPSC'";
+		const response = await pool.query(template, [id]);
+		console.log(response);
+
+		const employerslist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				name: item.name,
+				location: item.location,
+				industry: item.industry,
+				description: item.description
+
+			}
+		});
+		const ret = {rows: employerslist}
+
+		res.json(ret);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
+
+app.get("/api/find-employer-by-id-2", async (req, res) => {
+	const id = req.query.id;
+	console.log(id);
+	try {
+		const template = "SELECT id, name, email, password, location, industry, description FROM employers WHERE id = $1 AND name != 'UMW CPSC'";
+		const response = await pool.query(template, [id]);
+		console.log(response);
+
+		const employerslist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				name: item.name,
+				email: item.email,
+				password: item.password,
+				location: item.location,
+				industry: item.industry,
+				description: item.description
+
+			}
+		});
+		const ret = {rows: employerslist}
+
+		res.json(ret);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
+
+app.get("/api/search-employers", async(req, res) =>{
+	const query = req.query.q;
+
+	try{
+		let template = "SELECT * FROM employers WHERE name ILIKE $1 ORDER BY name ASC";
+		let response = await pool.query(template, [`%${query}%`]);
+		if(response.rowCount == 0){
+			template = "SELECT * FROM employers WHERE industry ILIKE $1 ORDER BY name ASC";
+			response = await pool.query(template, [`%${query}%`]);
+			if(response.rowCount == 0){
+				template = "SELECT * FROM employers WHERE location ILIKE $1 ORDER BY name ASC";
+				response = await pool.query(template, [`%${query}%`]);
+				if(response.rowCount == 0){
+					template = "SELECT * FROM employers WHERE description ILIKE $1 ORDER BY name ASC";
+					response = await pool.query(template, [`%${query}%`]);
+				}
+			}
+		}
+		const employerlist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				name: item.name,
+				industry: item.industry,
+				location: item.location,
+				description: item.description
+			}
+		});
+		const ret = {rows: employerlist}
+		res.json(ret);
+	}catch(err){
+		console.error(err);
+	}
+});
+
+//Remove employer
+app.delete("/api/remove-employer", async (req, res) => {
+	const id = req.body.id;
+	console.log("running remove employer api");
+	
+	try {
+		//Creating a query to check if the job to be removed exists in the job database.
+		console.log("req.body ");
+		console.log(req.body);
+		
+
+		console.log("id ");
+		console.log(id);
+		const template1 = "SELECT name FROM employers WHERE id = $1";
+		const response1 = await pool.query(template1, [id]);
+		
+		console.log("response1 ");
+		console.log(response1);
+		
+
+		//If no employer is found in the employer database matching the id, then error.
+		if (response1.rowCount == 0) {
+			console.log("employer not found");
+			res.json({ status: "error: not found"});
+		} 
+		//If the employer does exist in the job database, then delete it and all its reviews
+		else {
+			const removereviews = "DELETE FROM reviews WHERE emp_id = $1";
+			const result = await pool.query(removereviews, [id]);
+			console.log("deleting reviews");
+			const removejobs = "DELETE FROM jobs WHERE employer_id = $1";
+			const res2 = await pool.query(removejobs, [id]);
+			console.log("deleting jobs");
+			const template2 = "DELETE FROM employers WHERE id = $1";
+			const response1 = await pool.query(template2, [id]);
+			console.log("deleting employer");
+			res.json({status: "employer deleted"});
+		}
+	} catch (err) {
+		res.json({status: "error: listing not deleted"});
+		console.log(err);
+	}
+});
+
+app.get("/api/find-review-by-id", async (req, res) => {
+	const id = req.query.id;
+	console.log(id);
+	try {
+		const template = "SELECT id, emp_id, reviewer, title, description, posted_date, affiliation, flagged, rating FROM reviews WHERE emp_id = $1";
+		const response = await pool.query(template, [id]);
+
+		console.log(response);
+
+		const reviewlist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				emp_id: item.emp_id,
+				reviewer: item.reviewer,
+				title: item.title,
+				description: item.description,
+				posted_date: dateFormat(item.posted_date, "isoDate"),
+				affiliation: item.affiliation,
+				rating: item.rating,
+				flagged: item.flagged
+
+			}
+		});
+		const ret = {rows: reviewlist}
+
+		res.json(ret);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
+
+//create review and add it to the database
+app.post("/api/create-review", async (req, res) => {
+
+	console.log("----------");
+
+	try {
+		
+		console.log(req.body);
+		//title, employer_name, location, start_date , end_date, description
+		const employer_id_to_add = req.body.employer_id;
+		const reviewer_to_add = req.body.reviewer;
+		const title_to_add = req.body.title;
+		const rating_to_add = req.body.rating;
+		const description_to_add = req.body.description;
+		const posted_date_to_add = req.body.posted_date;
+		const affiliation_to_add = req.body.affiliation;
+
+		//if parameter is missing while trying to add, return error
+		if (employer_id_to_add == null || reviewer_to_add == null || title_to_add == null || rating_to_add == null || description_to_add == null || posted_date_to_add == null || affiliation_to_add == null) {
+			console.error("info missing");
+			console.log("employer_id_to_add, " + employer_id_to_add);
+			res.json({ error : "info missing"});			
+		}
+
+		else {
+			
+			console.log("review about to be added");
+
+			const template2 = "INSERT INTO reviews (emp_id, reviewer, title, rating, description, posted_date, affiliation) VALUES ($1, $2, $3, $4, $5, TO_DATE($6, 'YYYY-MM-DD'), $7)";
+			const response2 = await pool.query(template2, [
+				employer_id_to_add,
+				reviewer_to_add,
+				title_to_add,
+				rating_to_add,
+				description_to_add,
+				posted_date_to_add,
+				affiliation_to_add
+				]);
+			console.log("review added");
+			res.json({ "status" : "review added" });
+			
+		}
+	} catch (err) {
+		res.sendStatus(400);
+
+		console.log(err);
+	}
+
+});
+
+//Create Employer Acct
+app.post("/api/create-employer", async (req, res) => {
+
+	console.log("----------");
+
+	try {
+		
+		console.log(req.body);
+		//email, password, name, industry, location, description
+		const email_check = req.body.email;
+		const password_check = req.body.password;
+		const name_check = req.body.name;
+		const location_check = req.body.location;
+		const industry_check = req.body.industry;
+		const description_check = req.body.description;
+
+		//if parameter is missing while trying to add, return error
+		if (email_check == null || password_check == null || name_check == null || location_check == null || industry_check == null || description_check == null) {
+			console.error("info missing")
+			res.json({ status : "error"});			
+		}
+
+		else {
+			
+			console.log("employer credentials being checked");
+
+			//check if email exists
+			const template = "SELECT * FROM employers WHERE email = $1";
+			const response = await pool.query(template, [email_check]);
+
+			if(response.rowCount >= 1){
+				console.error("email already exists");
+				res.json({ status : "email already exists" });
+			} 
+
+			else{
+				//check if name exists			
+				const template2 = "SELECT * FROM employers WHERE name = $1";
+				const response2 = await pool.query(template2, [name_check]);
+				if(response2.rowCount >= 1){
+					console.error("name already exists");
+					res.json({ status : "name already exists" });
+				}
+
+				else{
+					//try to add employer
+					console.log("employer about to be added");
+					const template3 = "INSERT INTO employers (name, email, password, location, industry, description) VALUES ($1, $2, $3, $4, $5, $6)";
+					const response3 = await pool.query(template3, [
+						name_check,
+						email_check,
+						password_check,
+						location_check,
+						industry_check,
+						description_check
+						]);
 
 
+					//need to look up id of newly created user and send back as id in json
+					const template4 = "SELECT * FROM employers WHERE email = $1";
+					const response4 = await pool.query(template4, [email_check]);
 
+					//console.log("response4: ");
+					//console.log(response4);
+					//console.log(response4.rows[0].id);
 
+					console.log("employer added");
+					res.json({ status : "success",
+						id : response4.rows[0].id, 
+						user_type: "employer"
+					 });
+				}
+			}
+		}
+	} catch (err) {
+		res.sendStatus(400);
 
+		console.log(err);
+		res.json({status: "error"});
+	}
 
+});
 
 //checks email and password, returns status, user's info and whether they are admin or employer
-
-app.post("/api/check-login", async (req, res) => 
-{
+app.post("/api/check-login", async (req, res) => {
 	const employer_email = req.body.email;
 	const employer_password = req.body.password;
 	
@@ -233,7 +663,6 @@ app.post("/api/check-login", async (req, res) =>
 		//console.log(result.rows);
 		//console.log(result.rowCount);
 		
-
 		if (result.rowCount == 1) 
 		{
 			//console.log("starting argon2 compare");
@@ -249,6 +678,7 @@ app.post("/api/check-login", async (req, res) =>
 				//check to see if the login is by an admin
 				if (result.rows[0].email == "cpscinternshipproject@gmail.com") {
 					res.json({ status: "success",
+							id: 0,
 							email: result.rows[0].email,
 							password: result.rows[0].password,
 							name: result.rows[0].name,
@@ -290,10 +720,37 @@ app.post("/api/check-login", async (req, res) =>
 
 });
 
+//Find Flagged Reviews
+app.get("/api/find-flagged-reviews", async (req, res) => {
 
+	try {
+		const template = "SELECT id, emp_id, reviewer, title, description, posted_date, affiliation, flagged, rating FROM reviews WHERE flagged = true";
+		const response = await pool.query(template);
 
+		console.log(response);
 
+		const reviewlist = response.rows.map(function(item){
+			return{
+				id: item.id,
+				emp_id: item.emp_id,
+				reviewer: item.reviewer,
+				title: item.title,
+				description: item.description,
+				posted_date: dateFormat(item.posted_date, "isoDate"),
+				affiliation: item.affiliation,
+				rating: item.rating,
+				flagged: item.flagged
 
+			}
+		});
+		const ret = {rows: reviewlist}
+
+		res.json(ret);
+		} catch (err) {
+			res.json({ status: "error" });
+			console.log(err);
+		}
+});
 
 
 app.listen(app.get("port"), () => {

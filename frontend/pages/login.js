@@ -66,7 +66,7 @@ class Login extends React.Component {
 
 	constructor(props) {
 	  	super(props);
-	  	this.state = {email: "Enter your email address", password: "Enter your password"};
+	  	this.state = {email: "", password: ""};
 	}
 
 	async handleEmailUpdate(evt){
@@ -84,40 +84,68 @@ class Login extends React.Component {
 		return (
 			<MyLayout current="login">
 
+
+
+
+		<span className="bglightblue boxsmall">
+			<b>&nbsp;&nbsp;LOG IN&nbsp;&nbsp;</b>
+		</span>&nbsp;&nbsp;
+		<span href="#" className="bglightblueshaded boxsmall">
+			<b>&nbsp;&nbsp;<a href="/createemployer">SIGN UP</a>&nbsp;&nbsp;</b>
+		</span>
+
+		<div className="bglightblue boxsmall col">
+			<div className="bgwhite box col">
+		        <div>
+
+
+
+
 			<h1>Log in </h1>
 
-			
-			Username&nbsp;&nbsp;
-			<input
-			type="text"
-			className="text-style"
-			value={this.state.email}
-			onChange={this.handleEmailUpdate.bind(this)}
-			/>
+			<Form>
+				<Row>
 
-			<br /><br />
+					<Col>
+					
+						<Form.Group controlId="formEmail">
+						<Form.Label>Email</Form.Label>
+						<Form.Control type="text" placeholder="Enter your email address." value={this.state.email} onChange={this.handleEmailUpdate.bind(this)} />
+						</Form.Group>
 
-			Password&nbsp;&nbsp;
-			<input
-			type="password"
-			className="text-style"
-			value={this.state.password}
-			onChange={this.handlePasswordUpdate.bind(this)}
-			/>
-			
-			<br /><br />
+					</Col>
+
+					<Col>
+
+								<Form.Group controlId="formPassword">
+								<Form.Label>Password</Form.Label>
+								<Form.Control type="password"  placeholder="Enter your password." value={this.state.password} onChange={this.handlePasswordUpdate.bind(this)} />
+								</Form.Group>
+					
+					</Col>
+				</Row>
+
+			</Form>
+
 
 			<Button onClick={this.handleSearch.bind(that)}>
 			SUBMIT
 			</Button>
+			<br />
 
 			{('loggedInUser' in this.state ) ?
 				<div>
 				{(this.state.loggedInUser.status == "email incorrect" || this.state.loggedInUser.status == "password incorrect") ?
-					<p><b>Your email or passsword is incorrect. Please try again.</b></p>
+					<p><br /><b>Your email or passsword is incorrect. Please try again.</b></p>
 				: null}
 				</div>
 			: null}
+
+
+</div>
+</div>
+</div>
+
 
 			<style jsx>{``}</style>
 
