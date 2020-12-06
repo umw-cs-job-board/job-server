@@ -203,7 +203,7 @@ async function unflag_reviews(info){
 
 	const searchParams = new URLSearchParams(info);
 
-	return await fetch("http://localhost:8080/unflag-review", {
+	return await fetch("http://34.123.48.219:8080/api/unflag-review", {
 		method: "POST",
 		headers: header,
 		body: searchParams

@@ -234,7 +234,7 @@ app.post("/api/flag-review", async (req, res) => {
 });
 
 //remove flag from review and update it in the database
-app.post("/unflag-review", async (req, res) => {
+app.post("/api/unflag-review", async (req, res) => {
 
 	console.log("----------");
 
