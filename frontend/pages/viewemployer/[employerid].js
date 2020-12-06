@@ -27,6 +27,7 @@ const Post = props => {
     const [show, setShow] = useState(false);
 
     const handleSubmit = (evt) => {
+	console.log("create review");
       const Review = create_reviews({
         employer_id: props.result.id,
         reviewer: reviewer,
@@ -37,7 +38,7 @@ const Post = props => {
         rating: rating
       });
       setReview("Yes");
-      window.location.reload(true);
+      //window.location.reload(true);
     }
 
     const flagReview = (evt) => {
