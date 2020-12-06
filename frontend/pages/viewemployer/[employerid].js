@@ -17,6 +17,18 @@ import React, { useState } from "react";
 
 const Post = props => { 
 
+/*
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formReviewPostedDate">
+                        <Form.Label>Date</Form.Label>
+                        <Form.Control type="text" placeholder='yyyy-mm-dd' value={posted_date} onChange={e => setPosted_date(e.target.value)} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+*/
+
     const [reviewer, setReviewer] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -27,18 +39,19 @@ const Post = props => {
     const [show, setShow] = useState(false);
 
     const handleSubmit = (evt) => {
-	console.log("create review");
-      const Review = create_reviews({
-        employer_id: props.result.id,
-        reviewer: reviewer,
-        title: title,
-        description: description,
-        posted_date: posted_date,
-        affiliation: affiliation,
-        rating: rating
-      });
-      setReview("Yes");
-      //window.location.reload(true);
+        var today = new Date();
+        var todayDate = (today.getFullYear() + '-' + (today.getMonth()+1) + '-' +  today.getDate());
+        const Review = create_reviews({
+            employer_id: props.result.id,
+            reviewer: reviewer,
+            title: title,
+            description: description,
+            posted_date: todayDate,
+            affiliation: affiliation,
+            rating: rating
+        });
+        setReview("Yes");
+        window.location.reload(true);
     }
 
     const flagReview = (evt) => {
@@ -178,15 +191,6 @@ const Post = props => {
 
                 <Row>
                     <Col>
-                        <Form.Group controlId="formReviewPostedDate">
-                        <Form.Label>Date</Form.Label>
-                        <Form.Control type="text" placeholder='yyyy-mm-dd' value={posted_date} onChange={e => setPosted_date(e.target.value)} />
-                        </Form.Group>
-                    </Col>
-                </Row>
-
-                <Row>
-                    <Col>
                         <Form.Group controlId="formReviewDescription">
                         <Form.Label>Description</Form.Label>
                         <Form.Control as="textarea" rows={3} placeholder = 'Describe your experience at this company' type="text" value={description} onChange={e => setDescription(e.target.value)} />
@@ -194,12 +198,13 @@ const Post = props => {
                     </Col>
                 </Row>
 
-                {(({reviewer}=="") || ({title}=="") || ({description}=="") || ({posted_date}=="") || ({affiliation}=="") || ({rating}==""))  ?
-                    <p>Fill out all fields!<br /></p>
-                :<p>
-                <Link href="../viewemployer/[props.result.id]" as={`../viewemployer/${props.result.id}`} >
-                    <Button onClick={d => {handleSubmit(); alert("Review added.");}}>Submit</Button>
-                </Link>
+                { ( (reviewer=="") || (title=="") || (description=="") || (posted_date=="") || (affiliation=="") || (rating=="") || (isNaN(rating)) || (parseInt(rating)>5) || (parseInt(rating)<0) )  ?
+                    <p>All fields must be filled out and rating must be an integer 0-5!<br /></p>
+                :
+                <p>
+                    <Link href="../viewemployer/[props.result.id]" as={`../viewemployer/${props.result.id}`} >
+                        <Button onClick={d => {handleSubmit(); alert("Review added.");}}>Submit</Button>
+                    </Link>
                 <br /></p>
                 }
 

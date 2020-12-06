@@ -233,6 +233,43 @@ app.post("/api/flag-review", async (req, res) => {
 
 });
 
+//remove flag from review and update it in the database
+app.post("/unflag-review", async (req, res) => {
+
+	console.log("----------");
+
+	try {
+		
+		console.log(req.body);
+
+		const review_id = req.body.id;
+
+
+		//if parameter is missing while trying to add, return error
+		if (review_id == null) {
+			console.error("info missing");
+			console.log("review_id, " + review_id);
+			res.json({ error : "info missing"});			
+		}
+
+		else {
+			
+			console.log("review about to be updated as not flagged");
+
+			const template = "UPDATE reviews SET flagged = false WHERE id = $1";
+			const response = await pool.query(template, [review_id]);
+			console.log("review updated as not flagged");
+			res.json({ "status" : "review updated as not flagged" });
+			
+		}
+	} catch (err) {
+		res.sendStatus(400);
+
+		console.log(err);
+	}
+
+});
+
 //Remove Job
 app.delete("/api/remove-job", async (req, res) => {
 	const id = req.body.id;

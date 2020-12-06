@@ -1,4 +1,5 @@
 import { remove_review } from '../lib/utils.js';
+import { unflag_review } from '../lib/utils.js';
 import { find_flagged_reviews } from '../lib/utils.js';
 import Link from 'next/link';
 import MyLayout from '../components/mylayout.js';
@@ -21,11 +22,18 @@ const Flagged = props => {
         });
     }
 
+    const unflagReview = (evt) => {
+        console.log("idnum  " + evt);
+        const Unflag = unflag_review({
+            id: evt
+        });
+    }
+
     return (
 
     <MyLayout>
 
-    {props.reviews ? 
+    {props.reviews.rows ? 
         <div>
         <br />
 
@@ -45,14 +53,13 @@ const Flagged = props => {
                             {jsCookie.get("admin") ?
 
                                <p>
-                                   {item.flagged == true ?
-                                      <Button size="sm" variant="warning" disabled>FLAGGED</Button>
-                                   :null}
-                                   {' '}
                                    <Link href="../flaggedreviews" as={`../flaggedreviews`} >
                                      <Button size="sm" variant="dark" value={item.id} onClick={e => {deleteReview(e.target.value); alert("Review deleted.");}}>DELETE REVIEW</Button>
                                    </Link>
-
+                                    {' '}
+                                   <Link href="../flaggedreviews" as={`../flaggedreviews`} >
+                                     <Button size="sm" variant="danger" value={item.id} onClick={e => {unflagReview(e.target.value); alert("Review unflagged.");}}>UNFLAG REVIEW</Button>
+                                   </Link>
                                </p>
                             : null
                             }
@@ -62,7 +69,12 @@ const Flagged = props => {
                     )}
                 </tbody>
             </Table>
-        </div> : null}
+        </div> : 
+
+        <div>
+            <h2 style={{textAlign: "center"}}>No Flagged Reviews</h2>
+        </div>
+        }
 
     </MyLayout>
 
