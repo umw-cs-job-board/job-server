@@ -17,6 +17,18 @@ import React, { useState } from "react";
 
 const Post = props => { 
 
+/*
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formReviewPostedDate">
+                        <Form.Label>Date</Form.Label>
+                        <Form.Control type="text" placeholder='yyyy-mm-dd' value={posted_date} onChange={e => setPosted_date(e.target.value)} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+*/
+
     const [reviewer, setReviewer] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -27,17 +39,19 @@ const Post = props => {
     const [show, setShow] = useState(false);
 
     const handleSubmit = (evt) => {
-      const Review = create_reviews({
-        employer_id: props.result.id,
-        reviewer: reviewer,
-        title: title,
-        description: description,
-        posted_date: posted_date,
-        affiliation: affiliation,
-        rating: rating
-      });
-      setReview("Yes");
-      window.location.reload(true);
+        var today = new Date();
+        var todayDate = (today.getFullYear() + '-' + (today.getMonth()+1) + '-' +  today.getDate());
+        const Review = create_reviews({
+            employer_id: props.result.id,
+            reviewer: reviewer,
+            title: title,
+            description: description,
+            posted_date: todayDate,
+            affiliation: affiliation,
+            rating: rating
+        });
+        setReview("Yes");
+        window.location.reload(true);
     }
 
     const flagReview = (evt) => {
@@ -171,15 +185,6 @@ const Post = props => {
                         <Form.Group controlId="formReviewAffiliation">
                         <Form.Label>Job Title</Form.Label>
                         <Form.Control type="text" placeholder = 'e.g. software developer, intern etc.' value={affiliation} onChange={e => setAffiliation(e.target.value)} />
-                        </Form.Group>
-                    </Col>
-                </Row>
-
-                <Row>
-                    <Col>
-                        <Form.Group controlId="formReviewPostedDate">
-                        <Form.Label>Date</Form.Label>
-                        <Form.Control type="text" placeholder='yyyy-mm-dd' value={posted_date} onChange={e => setPosted_date(e.target.value)} />
                         </Form.Group>
                     </Col>
                 </Row>
