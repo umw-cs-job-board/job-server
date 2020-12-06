@@ -194,6 +194,22 @@ async function flag_reviews(info){
 	});
 }
 
+async function unflag_reviews(info){
+	console.log("In unflag_reviews in utils");
+	const header = {
+		'Accept': "application/json",
+		'Content-Type': 'application/x-www-form-urlencoded'
+	};
+
+	const searchParams = new URLSearchParams(info);
+
+	return await fetch("http://localhost:8080/unflag-review", {
+		method: "POST",
+		headers: header,
+		body: searchParams
+	});
+}
+
 async function findFlaggedReviews(){
 	return await fetch(`http://localhost:8080/find-flagged-reviews`).then(function(resp){
 		return resp.json();
@@ -265,6 +281,9 @@ module.exports = {
 	},
 	find_flagged_reviews: function(){
 		return findFlaggedReviews().catch(handleError);
+	},
+	unflag_review: function(info){
+		return unflag_reviews(info).catch(handleError);
 	}
 
 }
