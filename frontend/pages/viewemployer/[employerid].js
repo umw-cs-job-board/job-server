@@ -17,22 +17,9 @@ import React, { useState } from "react";
 
 const Post = props => { 
 
-/*
-                <Row>
-                    <Col>
-                        <Form.Group controlId="formReviewPostedDate">
-                        <Form.Label>Date</Form.Label>
-                        <Form.Control type="text" placeholder='yyyy-mm-dd' value={posted_date} onChange={e => setPosted_date(e.target.value)} />
-                        </Form.Group>
-                    </Col>
-                </Row>
-
-*/
-
     const [reviewer, setReviewer] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [posted_date, setPosted_date] = useState("");
     const [affiliation, setAffiliation] = useState("");
     const [rating, setRating] = useState("");
     const [review, setReview] = useState("No");
@@ -198,7 +185,7 @@ const Post = props => {
                     </Col>
                 </Row>
 
-                { ( (reviewer=="") || (title=="") || (description=="") || (posted_date=="") || (affiliation=="") || (rating=="") || (isNaN(rating)) || (parseInt(rating)>5) || (parseInt(rating)<0) )  ?
+                { ( (reviewer=="") || (title=="") || (description=="") || (affiliation=="") || (rating=="") || (isNaN(rating)) || (parseInt(rating)>5) || (parseInt(rating)<0) )  ?
                     <p>All fields must be filled out and rating must be an integer 0-5!<br /></p>
                 :
                 <p>
