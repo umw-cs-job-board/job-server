@@ -79,27 +79,26 @@ class PostJob extends React.Component{
 				<Row>
 					
 
-					{ jsCookie.get("admin") ?
 			            
 					<Col>
 						<Form.Group controlId="formCompanyName">
 						<Form.Label>Company name</Form.Label>
-						<Form.Control type="text" value={this.state.employer_name} onChange={this.updateEmployer.bind(this)} />
+						
+						{ jsCookie.get("admin") ?
+							<Form.Control type="text" value={this.state.employer_name} onChange={this.updateEmployer.bind(this)} />
+						:
+							null
+						}
+
+
+						{ jsCookie.get("employer") ?
+							<Form.Control type="text" value={this.state.employer_name} onChange={this.updateEmployer.bind(this)} readOnly />
+						:
+							null
+						}
+
 						</Form.Group>
 					</Col>
-
-			            : 
-
-			        <Col>
-						<Form.Group controlId="formCompanyName2">
-						<Form.Label>Company name</Form.Label>
-						<Form.Control type="text" value={this.state.employer_name} onChange={this.updateEmployer.bind(this)} readOnly />
-						</Form.Group>
-					</Col>
-
-			        }
-
-
 					<Col>
 						<Form.Group controlId="formJobTitle">
 						<Form.Label>Job title</Form.Label>
