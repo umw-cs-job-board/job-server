@@ -143,7 +143,7 @@ class PostJob extends React.Component{
 					</Col>
 				</Row>
 
-				{((this.state.title=="") || (this.state.employer_name=="") || (this.state.location=="") || (this.state.start_date=="") || (this.state.end_date=="") || (this.state.description==""))  ?
+				{((this.state.title=="") || (this.state.employer_name=="") || (this.state.location=="") || (this.state.start_date=="") || (this.state.end_date=="") || (this.state.description=="") || (this.state.contact==""))  ?
 					<p>Fill out all fields!<br /></p>
 				:<p><Button onClick={this.submit.bind(this)}>Submit</Button><br /></p>}
 				
