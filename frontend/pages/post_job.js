@@ -138,7 +138,7 @@ class PostJob extends React.Component{
 					<Col>
 						<Form.Group controlId="formDescription">
 						<Form.Label>Description</Form.Label>
-						<Form.Control as="textarea" rows={3} placeholder = 'This is a job blah blah blah' type="text" value={this.state.description} onChange={this.updateDescription.bind(this)} />
+						<Form.Control as="textarea" rows={3} placeholder = 'Give a brief description of the job.' type="text" value={this.state.description} onChange={this.updateDescription.bind(this)} />
 						</Form.Group>
 					</Col>
 				</Row>
