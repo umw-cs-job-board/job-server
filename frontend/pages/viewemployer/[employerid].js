@@ -38,7 +38,7 @@ const Post = props => {
             rating: rating
         });
         setReview("Yes");
-        window.location.reload(true);
+//        window.location.reload(true);
     }
 
     const flagReview = (evt) => {
