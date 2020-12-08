@@ -443,16 +443,16 @@ app.get("/api/search-employers", async(req, res) =>{
 	const query = req.query.q;
 
 	try{
-		let template = "SELECT * FROM employers WHERE name ILIKE $1 ORDER BY name ASC";
+		let template = "SELECT * FROM employers WHERE name ILIKE $1 AND name != 'UMW CPSC' ORDER BY name ASC";
 		let response = await pool.query(template, [`%${query}%`]);
 		if(response.rowCount == 0){
-			template = "SELECT * FROM employers WHERE industry ILIKE $1 ORDER BY name ASC";
+			template = "SELECT * FROM employers WHERE industry ILIKE $1 AND name != 'UMW CPSC' ORDER BY name ASC";
 			response = await pool.query(template, [`%${query}%`]);
 			if(response.rowCount == 0){
-				template = "SELECT * FROM employers WHERE location ILIKE $1 ORDER BY name ASC";
+				template = "SELECT * FROM employers WHERE location ILIKE $1 AND name != 'UMW CPSC' ORDER BY name ASC";
 				response = await pool.query(template, [`%${query}%`]);
 				if(response.rowCount == 0){
-					template = "SELECT * FROM employers WHERE description ILIKE $1 ORDER BY name ASC";
+					template = "SELECT * FROM employers WHERE description ILIKE $1 AND name != 'UMW CPSC' ORDER BY name ASC";
 					response = await pool.query(template, [`%${query}%`]);
 				}
 			}
